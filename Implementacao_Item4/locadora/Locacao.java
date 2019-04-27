@@ -46,7 +46,7 @@ public class Locacao{
         return hora_aluguel;
     }
 
-    public void setHoraDevolucao(String hora_aluguel){
+    public void setHoraDevolucao(String hora_devolucao){
         this.hora_devolucao = hora_devolucao;
     }
     public String getHoraDevolucao(){
