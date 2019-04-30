@@ -13,10 +13,11 @@ public class Locacao{
     private String hora_devolucao;
     private double preco_final;
     private boolean finalizada;
-    private String protocolo;
+    private int protocolo;
     private Jogo game;
+    private static int base_protocol = 0;
 
-    public Locacao(String data_aluguel, String hora_aluguel, String protocolo,
+    public Locacao(String data_aluguel, String hora_aluguel, int protocolo,
     Jogo game){
         finalizada = false;
         this.data_aluguel = data_aluguel;
@@ -107,10 +108,16 @@ public class Locacao{
         return finalizada;
     }
 
-    public void setProtocolo(String protocolo){
-        this.protocolo = protocolo;
+    private int generateProtocolo(){
+        base_protocol++;
+        return base_protocol;
     }
-    public String getProtocolo(){
+
+    public void setProtocolo(){
+        this.protocolo = generateProtocolo();
+    }
+
+    public int getProtocolo(){
         return protocolo;
     }
 
