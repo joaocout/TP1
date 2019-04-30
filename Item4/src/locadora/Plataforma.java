@@ -3,8 +3,6 @@ package locadora;
 
 import java.util.ArrayList;
 
-import locadora.Jogo;
-
 public class Plataforma {
 
     private String nome;
