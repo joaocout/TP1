@@ -7,3 +7,6 @@ public interface Aluguel {
 	public abstract void devolver() throws DevolverEx;
 	public abstract double PrecoFinal() throws PrecoEx;
 }
+
+
+/*oi*/
