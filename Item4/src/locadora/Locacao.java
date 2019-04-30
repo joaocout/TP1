@@ -17,12 +17,8 @@ public class Locacao{
     private Jogo game;
     private static int base_protocol = 0;
 
-    public Locacao(String data_aluguel, String hora_aluguel, int protocolo,
-    Jogo game){
+    public Locacao(Jogo game){
         finalizada = false;
-        this.data_aluguel = data_aluguel;
-        this.hora_aluguel = hora_aluguel;
-        this.protocolo = protocolo;
         this.game = game;
     }
 
@@ -62,7 +58,7 @@ public class Locacao{
         int ano=0, mes=0, dia=0;
 
         int i = 0;        
-        for(String a:data_aluguel.split("\\-")){
+        for(String a: data_aluguel.split("\\-")){
             if(i==0){
                 ano = Integer.valueOf(a);
                 i++;
@@ -79,7 +75,7 @@ public class Locacao{
         LocalDate d_aluguel = LocalDate.of(ano, mes, dia);
         
         i = 0;
-        for(String a:data_devolucao.split("\\-")){
+        for(String a: data_devolucao.split("\\-")){
             if(i==0){
                 ano = Integer.valueOf(a);
                 i++;
@@ -98,7 +94,7 @@ public class Locacao{
         long dias = ChronoUnit.DAYS.between(d_aluguel, d_devolucao);
 
         preco_final = preco_final * dias;
-        return preco_final;        
+        return preco_final;
     }
 
     public void setFinalizada(boolean finalizada){
@@ -128,21 +124,21 @@ public class Locacao{
         return game;
     }
 
-    void alugar(){
+    public void alugar(){
         LocalDate dia = LocalDate.now();
         LocalTime hora = LocalTime.now().withSecond(0).withNano(0);
         data_aluguel = dia.toString();
         hora_aluguel = hora.toString();
     }
 
-    void devolver(){
+    public void devolver(){
         LocalDate dia = LocalDate.now();
         LocalTime hora = LocalTime.now().withSecond(0).withNano(0);
         data_devolucao = dia.toString();
         hora_devolucao = hora.toString();
     }
 
-    void pagar(){
+    public void pagar(){
         finalizada = true;
     }
     
