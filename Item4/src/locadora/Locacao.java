@@ -1,11 +1,15 @@
 package locadora;
 
 
+import interfaces.Aluguel;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
-import locadora.exception.*;
-import locadora.interfaces.*;
+
+import exception.AlugarEx;
+import exception.DevolverEx;
+import exception.PrecoEx;
 
 public class Locacao implements Aluguel{
 
@@ -156,7 +160,14 @@ public class Locacao implements Aluguel{
     
     public String toString(){
     	String finalizada = this.finalizada ? "Sim" : "Nao";
-    	String toret = "Jogo: " + game.getTitulo() + "\nPreco atual: " + PrecoFinal() + "\nFinalizada: " + finalizada + "\n";
+    	String toret;
+    	String pfinal = "";
+    	try{
+    		pfinal += PrecoFinal();
+    	} catch(PrecoEx ex){
+    		pfinal = ex.getMessage(); 
+    	}
+		toret = "Jogo: " + game.getTitulo() + "\nPreco atual: " + pfinal + "\nFinalizada: " + finalizada + "\n";
     	return toret;
     }
     

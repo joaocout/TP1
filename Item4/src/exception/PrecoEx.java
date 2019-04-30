@@ -1,5 +1,6 @@
-package locadora.exception;
+package exception;
 
+@SuppressWarnings("serial")
 public class PrecoEx extends Exception {
 
 	public PrecoEx(String msg) {
