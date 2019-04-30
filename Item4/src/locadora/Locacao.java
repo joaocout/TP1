@@ -18,7 +18,8 @@ public class Locacao{
     private static int base_protocol = 0;
 
     public Locacao(Jogo game){
-        finalizada = false;
+        this.finalizada = false;
+        this.protocolo = generateProtocolo();
         this.game = game;
     }
 
