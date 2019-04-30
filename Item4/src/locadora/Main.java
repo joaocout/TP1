@@ -1,6 +1,7 @@
 package locadora;
 
-import locadora.exception.*;
+import exception.AlugarEx;
+import exception.DevolverEx;
 
 public class Main {
 	public static void main(String[] args){

@@ -1,4 +1,4 @@
-package locadora.exception;
+package exception;
 
 @SuppressWarnings("serial")
 public class AlugarEx extends Exception {

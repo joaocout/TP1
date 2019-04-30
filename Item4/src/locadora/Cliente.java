@@ -2,8 +2,6 @@ package locadora;
 
 
 import java.util.ArrayList;
-import exception.PrecoEx;
-
 
 public class Cliente{
 
@@ -66,8 +64,6 @@ public class Cliente{
 	                divida+=locacoes.get(i).PrecoFinal();
 	        }
         } catch(Exception ex){
-        	System.out.println(ex.getMessage());
-        } catch(PrecoEx ex){
         	System.out.println(ex.getMessage());
         }
         return divida;

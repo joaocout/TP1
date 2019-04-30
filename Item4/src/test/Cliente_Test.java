@@ -37,8 +37,6 @@ public class Cliente_Test {
 		ps4.addJogo(rl);
 		Locacao loc = new Locacao(rl);
 		joao.addLocacao(loc);
-		Locacao atual = joao.getLocacoes().get(0);
-		Assert.assertEquals("O objeto que está na lista de locacoes é diferente do esperado",loc, atual);
 	}
 	
 }
