@@ -52,4 +52,9 @@ public class Jogo{
         return p;
     }
     
+    @Override
+    public String toString(){
+    	return "Titulo: " + this.getTitulo() + "\nPlataforma: " + this.p.getNome() + "\nQuantidade: " + this.getQtd();
+    }
+    
 }
