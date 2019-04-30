@@ -1,0 +1,12 @@
+package locadora;
+
+public class Main {
+	public static void main(String[] args){
+		Plataforma ps4 = new Plataforma("PS4",1.5f);
+		Jogo gow = new Jogo("God of War", 6.0f, 10, ps4);
+		Locacao loc0 = new Locacao(gow);
+		loc0.alugar();
+		Cliente joao = new Cliente("Joao","1234567","09123182","joao@mail.com")
+		System.exit(0);
+	}
+}
