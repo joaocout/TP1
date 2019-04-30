@@ -69,7 +69,7 @@ public class Locacao implements Aluguel{
         return finalizada;
     }
 
-    public double PrecoFinal() {
+    public double PrecoFinal() throws PrecoEx {
     	try {
 	        preco_final = game.getPrecoBase();
 	        preco_final = preco_final*game.getPlataforma().getCoeficiente();
@@ -122,8 +122,7 @@ public class Locacao implements Aluguel{
 	        preco_final = preco_final * dias;
 	        return preco_final;
     	} catch(Exception ex){
-    		ex.printStackTrace();
-    		return 0.0f;
+    		throw new PrecoEx("Erro ao calcular debito.");
     	}
     }
 

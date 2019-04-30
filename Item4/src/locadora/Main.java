@@ -20,8 +20,6 @@ public class Main {
 		} catch(DevolverEx ex){
 			System.out.println("Erro ao devolver: " + ex.getMessage());
 		}
-		//System.out.println(joao.Divida());
-		
 		System.exit(0);
 	}
 }
