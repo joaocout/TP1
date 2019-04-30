@@ -2,7 +2,8 @@ package locadora;
 
 
 import java.util.ArrayList;
-import locadora.exception.*;
+import exception.PrecoEx;
+
 
 public class Cliente{
 
