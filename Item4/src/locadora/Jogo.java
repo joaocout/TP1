@@ -51,4 +51,5 @@ public class Jogo{
     public Plataforma getPlataforma(){
         return p;
     }
+    
 }

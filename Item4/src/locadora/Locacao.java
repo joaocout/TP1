@@ -7,9 +7,9 @@ import java.time.temporal.ChronoUnit;
 
 public class Locacao{
 
-    private String data_aluguel; //Formato: 2015-04-12 (yyyy-mm-dd)
+    private String data_aluguel;	//formato: 2015-04-12 (yyyy-mm-dd)
     private String data_devolucao;
-    private String hora_aluguel; //Formato: 23:20 (hh:mm)
+    private String hora_aluguel;	//formato: 23:20 (hh:mm)
     private String hora_devolucao;
     private double preco_final;
     private boolean finalizada;
@@ -140,4 +140,3 @@ public class Locacao{
     }
     
 }
-
