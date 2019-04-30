@@ -4,13 +4,15 @@ package locadora;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+import locadora.exception.*;
+import locadora.interfaces.*;
 
-public class Locacao{
+public class Locacao implements Aluguel{
 
-    private String data_aluguel;// = "0000-00-00";	//formato: 2015-04-12 (yyyy-mm-dd)
-    private String data_devolucao;// = "0000-00-00";
-    private String hora_aluguel;// = "00:00";	//formato: 23:20 (hh:mm)
-    private String hora_devolucao;// = "00:00";
+    private String data_aluguel; //formato: 2015-04-12 (yyyy-mm-dd)
+    private String data_devolucao;
+    private String hora_aluguel; //formato: 23:20 (hh:mm)
+    private String hora_devolucao;
     private double preco_final;
     private boolean finalizada;
     private int protocolo;
@@ -18,6 +20,7 @@ public class Locacao{
     private static int base_protocol = 0;
 
     public Locacao(Jogo game){
+    	this.data_aluguel = "0000-00-00";
         this.finalizada = false;
         this.protocolo = generateProtocolo();
         this.game = game;
@@ -29,26 +32,41 @@ public class Locacao{
     public String getDataAluguel(){
         return data_aluguel;
     }
-
     public void setDataDevolucao(String data_devolucao){
         this.data_devolucao = data_devolucao;
     }
     public String getDataDevolucao(){
         return data_devolucao;
     }
-
     public void setHoraAluguel(String hora_aluguel){
         this.hora_aluguel = hora_aluguel;
     }
     public String getHoraAluguel(){
         return hora_aluguel;
     }
-
     public void setHoraDevolucao(String hora_devolucao){
         this.hora_devolucao = hora_devolucao;
     }
     public String getHoraDevolucao(){
         return hora_devolucao;
+    }
+    public void setProtocolo(){
+        this.protocolo = generateProtocolo();
+    }
+    public int getProtocolo(){
+        return protocolo;
+    }
+    public void setJogo(Jogo game){
+        this.game = game;
+    }
+    public Jogo getJogo(){
+        return game;
+    }
+    public void setFinalizada(boolean finalizada){
+        this.finalizada = finalizada;
+    }
+    public boolean getFinalizada(){
+        return finalizada;
     }
 
     public double PrecoFinal() {
@@ -109,54 +127,32 @@ public class Locacao{
     	}
     }
 
-    public void setFinalizada(boolean finalizada){
-        this.finalizada = finalizada;
-    }
-    public boolean getFinalizada(){
-        return finalizada;
-    }
-
     private int generateProtocolo(){
         base_protocol++;
         return base_protocol;
     }
 
-    public void setProtocolo(){
-        this.protocolo = generateProtocolo();
+    public void alugar() throws AlugarEx {
+    	if(this.data_aluguel.equals("0000-00-00")){
+	    	LocalDate dia = LocalDate.now();
+		    LocalTime hora = LocalTime.now().withSecond(0).withNano(0);
+		    data_aluguel = dia.toString();
+		    hora_aluguel = hora.toString();
+    	} else {
+    		throw new AlugarEx("Aluguel ja realizado.");
+    	}
     }
 
-    public int getProtocolo(){
-        return protocolo;
-    }
-
-    public void setJogo(Jogo game){
-        this.game = game;
-    }
-    public Jogo getJogo(){
-        return game;
-    }
-
-    public void alugar() throws Exception {
-	        LocalDate dia = LocalDate.now();
-	        LocalTime hora = LocalTime.now().withSecond(0).withNano(0);
-	        data_aluguel = dia.toString();
-	        hora_aluguel = hora.toString();
-    }
-
-    public void devolver() throws Exception {
+    public void devolver() throws DevolverEx {
     	if(!this.finalizada){
 	        LocalDate dia = LocalDate.now();
 	        LocalTime hora = LocalTime.now().withSecond(0).withNano(0);
 	        data_devolucao = dia.toString();
 	        hora_devolucao = hora.toString();
-	        pagar();
+	        this.finalizada = true;
     	} else {
-    		throw new Exception("Locacao ja finalizada.");
+    		throw new DevolverEx("Locacao ja finalizada.");
     	}
-    }
-
-    public void pagar(){
-        finalizada = true;
     }
     
     public String toString(){

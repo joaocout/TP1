@@ -1,5 +1,7 @@
 package locadora;
 
+import locadora.exception.*;
+
 public class Main {
 	public static void main(String[] args){
 		Plataforma ps4 = new Plataforma("PS4",1.5f);
@@ -9,20 +11,16 @@ public class Main {
 		joao.addLocacao(loc0);
 		try{
 			loc0.alugar();
-		} catch(Exception ex){
-			//ex.printStackTrace();
-			System.out.println(ex.getMessage());
-		}
-		try{
 			System.out.println(loc0.toString());
 			loc0.devolver();
 			System.out.println(loc0.toString());
 			loc0.devolver();
-		} catch(Exception ex){
-			//ex.printStackTrace();
-			System.out.println(ex.getMessage());
+		} catch(AlugarEx ex){
+			System.out.println("Erro ao alugar: " + ex.getMessage());
+		} catch(DevolverEx ex){
+			System.out.println("Erro ao devolver: " + ex.getMessage());
 		}
-		System.out.println(joao.Divida());
+		//System.out.println(joao.Divida());
 		
 		System.exit(0);
 	}
