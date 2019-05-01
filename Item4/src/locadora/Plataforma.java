@@ -28,7 +28,11 @@ public class Plataforma {
     public double getCoeficiente(){
         return coeficiente;
     }
-
+    
+    public ArrayList<Jogo> getJogos(){
+    	return jogos;
+    }
+    
     public void addJogo(Jogo j){
     	try{
     		jogos.add(j);
@@ -39,7 +43,7 @@ public class Plataforma {
     public void removeJogo(String nome){
     	try{
 	        for(int i=0; i<jogos.size(); i++){
-	            if(jogos.get(i).getTitulo().equals(nome))
+	            if(jogos.get(i).getTitulo().toLowerCase().equals(nome.toLowerCase()))
 	                jogos.remove(i);
 	        }
     	} catch (Exception ex){

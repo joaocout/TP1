@@ -1,5 +1,6 @@
 package locadora;
 
+
 import exception.AlugarEx;
 import exception.DevolverEx;
 
@@ -50,19 +51,19 @@ public class Main {
 		
 		// Locacoes
 		try {
-			Locacao loc0 = new Locacao(fifa19p4);
+			Locacao loc0 = new Locacao(fifa19p4, 14);
 			joao.addLocacao(loc0);
 			loc0.alugar();
 			System.out.println("Locacao realizada. Protocolo: " + loc0.getProtocolo());
 			System.out.println(loc0.toString());
 			
-			Locacao loc1 = new Locacao(gow);
+			Locacao loc1 = new Locacao(gow, 7);
 			loc1.alugar();
 			joao.addLocacao(loc1);
 			System.out.println("Locacao realizada. Protocolo: " + loc1.getProtocolo());
 			System.out.println(loc1.toString());
 			
-			Locacao loc2 = new Locacao(rlx);
+			Locacao loc2 = new Locacao(rlx, 7);
 			loc2.alugar();
 			pedro.addLocacao(loc1);
 			System.out.println("Locacao realizada. Protocolo: " + loc2.getProtocolo());

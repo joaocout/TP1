@@ -5,6 +5,7 @@ import interfaces.Aluguel;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+//import java.time.temporal.ChronoUnit;
 import java.time.temporal.ChronoUnit;
 
 import exception.AlugarEx;
@@ -22,15 +23,25 @@ public class Locacao implements Aluguel{
     private int protocolo;
     private Jogo game;
     private static int base_protocol = 0;
+    private int dias;
 
-    public Locacao(Jogo game){
+    public Locacao(Jogo game, int dias){
     	this.data_aluguel = "0000-00-00";
     	this.data_devolucao = "0000-00-00";
         this.finalizada = false;
         this.protocolo = generateProtocolo();
         this.game = game;
+        this.dias = dias;
     }
-
+    
+    public void setDias(int dias) {
+    	this.dias = dias;
+    }
+    
+    public int getDias() {
+    	return dias;
+    }
+    
     public void setDataAluguel(String data_aluguel){
         this.data_aluguel = data_aluguel;
     }
@@ -76,13 +87,13 @@ public class Locacao implements Aluguel{
 
     public double PrecoFinal() throws PrecoEx {
     	try {
-	        preco_final = game.getPrecoBase();
-	        preco_final = preco_final*game.getPlataforma().getCoeficiente();
+    		
+	        preco_final = game.getPrecoBase()*game.getPlataforma().getCoeficiente()*dias;
 	        
 	        int ano=0, mes=0, dia=0;
 	
-	        int i = 0;        
-	        for(String a: data_aluguel.split("\\-")){
+	        int i = 0;
+	        /*for(String a: data_aluguel.split("\\-")){
 	            if(i==0){
 	                ano = Integer.valueOf(a);
 	                i++;
@@ -96,12 +107,12 @@ public class Locacao implements Aluguel{
 	                i++;
 	            }
 	        }
-	        LocalDate d_aluguel = LocalDate.of(ano, mes, dia);
+	        LocalDate d_aluguel = LocalDate.of(ano, mes, dia);*/
 	        
 	        // Caso queira apenas o valor da divida ate entao (e nao tiver devolvido ainda)
-	        if(!this.finalizada){
-	        	this.data_devolucao = LocalDate.now().toString();
-	        }
+	        //if(!this.finalizada){
+	        //	this.data_devolucao = LocalDate.now().toString();
+	        //}
 	        
 	        i = 0;
 	        for(String a: data_devolucao.split("\\-")){
@@ -120,13 +131,19 @@ public class Locacao implements Aluguel{
 	        }
 	        LocalDate d_devolucao = LocalDate.of(ano, mes, dia);
 	        
-	        long dias = ChronoUnit.DAYS.between(d_aluguel, d_devolucao);
+	        //long dias = ChronoUnit.DAYS.between(d_aluguel, d_devolucao);
 	
-	        if(dias == 0) dias = 1;
+	        //if(dias == 0) dias = 1;
 	        
-	        preco_final = preco_final * dias;
+	        if(!finalizada && LocalDate.now().isAfter(d_devolucao)) {
+	        	long dias_atraso = ChronoUnit.DAYS.between(d_devolucao, LocalDate.now());
+	        	double multa = game.getPrecoBase()*game.getPlataforma().getCoeficiente()*dias_atraso*2;
+	        	preco_final += multa;
+	        }
+	        
 	        return preco_final;
-    	} catch(Exception ex){
+    	}
+    	catch(Exception ex){
     		throw new PrecoEx("Erro ao calcular debito.");
     	}
     }
@@ -139,30 +156,34 @@ public class Locacao implements Aluguel{
     public void alugar() throws AlugarEx {
     	if(this.data_aluguel.equals("0000-00-00")){
     		if(game.getQtd() > 0){
-		    	LocalDate dia = LocalDate.now();
-			    LocalTime hora = LocalTime.now().withSecond(0).withNano(0);
-			    data_aluguel = dia.toString();
-			    hora_aluguel = hora.toString();
-			    game.addQtd();
-    		} else {
+    			
+			    data_aluguel = LocalDate.now().toString();
+			    hora_aluguel = LocalTime.now().withSecond(0).withNano(0).toString();
+			    data_devolucao = LocalDate.now().plusDays(dias).toString();
+			    game.subQtd();
+			    
+    		}
+    		else {
     			throw new AlugarEx("Nao ha mais unidades desse jogo.");
     		}
-    	} else {
+    	}
+    	else {
     		throw new AlugarEx("Aluguel ja realizado.");
     	}
     }
 
     public void devolver() throws DevolverEx {
     	if(!this.finalizada){
-	        LocalDate dia = LocalDate.now();
-	        LocalTime hora = LocalTime.now().withSecond(0).withNano(0);
-	        data_devolucao = dia.toString();
-	        hora_devolucao = hora.toString();
-	        game.subQtd();
+    		
+	        hora_devolucao = LocalTime.now().withSecond(0).withNano(0).toString();
+	        game.addQtd();
 	        this.finalizada = true;
-    	} else {
-    		throw new DevolverEx("Locacao ja finalizada.");
+	        
     	}
+    	else if(data_aluguel.equals("0000-00-00"))
+    		throw new DevolverEx("Ainda nao ha uma data de aluguel definida.");
+    	else if(this.finalizada)
+    		throw new DevolverEx("Locacao ja finalizada.");
     }
     
     @Override 
