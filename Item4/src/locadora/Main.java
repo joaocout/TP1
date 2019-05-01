@@ -76,8 +76,11 @@ public class Main {
 			
 			// Devolver jogos
 			loc0.devolver();
+			System.out.println("Locacao #" + loc0.getProtocolo() + " finalizada.");
 			loc1.devolver();
+			System.out.println("Locacao #" + loc1.getProtocolo() + " finalizada.");
 			loc2.devolver();
+			System.out.println("Locacao #" + loc2.getProtocolo() + " finalizada.");
 			
 
 			// Mostrar clientes novamente

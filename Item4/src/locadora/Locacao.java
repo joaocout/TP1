@@ -174,16 +174,17 @@ public class Locacao implements Aluguel{
 
     public void devolver() throws DevolverEx {
     	if(!this.finalizada){
-    		
-	        hora_devolucao = LocalTime.now().withSecond(0).withNano(0).toString();
-	        game.addQtd();
-	        this.finalizada = true;
-	        
+    		if(data_aluguel.equals("0000-00-00")){
+        		throw new DevolverEx("Ainda nao ha uma data de aluguel definida.");
+    		} else {
+		        hora_devolucao = LocalTime.now().withSecond(0).withNano(0).toString();
+		        game.addQtd();
+		        this.finalizada = true;
+    		}
     	}
-    	else if(data_aluguel.equals("0000-00-00"))
-    		throw new DevolverEx("Ainda nao ha uma data de aluguel definida.");
-    	else if(this.finalizada)
+    	else{
     		throw new DevolverEx("Locacao ja finalizada.");
+    	}
     }
     
     @Override 
