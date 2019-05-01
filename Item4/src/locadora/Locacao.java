@@ -25,6 +25,7 @@ public class Locacao implements Aluguel{
 
     public Locacao(Jogo game){
     	this.data_aluguel = "0000-00-00";
+    	this.data_devolucao = "0000-00-00";
         this.finalizada = false;
         this.protocolo = generateProtocolo();
         this.game = game;
