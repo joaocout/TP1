@@ -5,7 +5,6 @@ import interfaces.Aluguel;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-//import java.time.temporal.ChronoUnit;
 import java.time.temporal.ChronoUnit;
 
 import exception.AlugarEx;
@@ -138,6 +137,7 @@ public class Locacao implements Aluguel{
 	        if(!finalizada && LocalDate.now().isAfter(d_devolucao)) {
 	        	long dias_atraso = ChronoUnit.DAYS.between(d_devolucao, LocalDate.now());
 	        	double multa = game.getPrecoBase()*game.getPlataforma().getCoeficiente()*dias_atraso*2;
+	        	//cada dia de atraso, soma o dobro do que seria somado em um dia normal
 	        	preco_final += multa;
 	        }
 	        
