@@ -85,5 +85,11 @@ public class Cliente{
     		System.out.println(ex.getMessage());
     	}
     }
-
+    
+    @Override
+    public String toString(){
+    	return "Nome: " + this.getNome() + "\nRG: " + this.getRG() + "\nCPF: " + this.getCPF() 
+    			+ "\nEmail: " + this.getEmail() + "\nTelefone: " + this.getTelefone() + "\nDivida: " + Divida() 
+    			+ "\nTotal locacoes feitas: " + this.locacoes.size() + "\n";
+    }
 }
