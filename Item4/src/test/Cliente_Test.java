@@ -3,7 +3,8 @@ package test;
 
 import org.junit.*;
 import locadora.*;
-
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 public class Cliente_Test {
 	
@@ -20,10 +21,12 @@ public class Cliente_Test {
 		
 		Locacao loc = new Locacao(rl);
 		joao.addLocacao(loc);
-		loc.setDataAluguel("2018-04-30");
-		loc.setDataDevolucao("2018-05-02");
+		loc.setDataAluguel("2019-04-28");
+		loc.setDataDevolucao(LocalDate.now().toString());
+		long dias = ChronoUnit.DAYS.between(LocalDate.of(2019,04,28), LocalDate.now());
 		double atual = joao.Divida();
-		Assert.assertEquals(12f, atual, 0.0001f);
+		double esperado = dias * ps4.getCoeficiente() * rl.getPrecoBase();
+		Assert.assertEquals(esperado, atual, 0.001f);
 	}
 	
 	@Test
@@ -37,6 +40,9 @@ public class Cliente_Test {
 		ps4.addJogo(rl);
 		Locacao loc = new Locacao(rl);
 		joao.addLocacao(loc);
+		
+	Locacao atual = joao.getLocacoes().get(0);
+	Assert.assertEquals("O objeto contido na lista de locacoes é diferente do que se esperava",loc, atual);
 	}
 	
 }
