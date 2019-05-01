@@ -138,10 +138,15 @@ public class Locacao implements Aluguel{
 
     public void alugar() throws AlugarEx {
     	if(this.data_aluguel.equals("0000-00-00")){
-	    	LocalDate dia = LocalDate.now();
-		    LocalTime hora = LocalTime.now().withSecond(0).withNano(0);
-		    data_aluguel = dia.toString();
-		    hora_aluguel = hora.toString();
+    		if(game.getQtd() > 0){
+		    	LocalDate dia = LocalDate.now();
+			    LocalTime hora = LocalTime.now().withSecond(0).withNano(0);
+			    data_aluguel = dia.toString();
+			    hora_aluguel = hora.toString();
+			    game.addQtd();
+    		} else {
+    			throw new AlugarEx("Nao ha mais unidades desse jogo.");
+    		}
     	} else {
     		throw new AlugarEx("Aluguel ja realizado.");
     	}
@@ -153,12 +158,14 @@ public class Locacao implements Aluguel{
 	        LocalTime hora = LocalTime.now().withSecond(0).withNano(0);
 	        data_devolucao = dia.toString();
 	        hora_devolucao = hora.toString();
+	        game.subQtd();
 	        this.finalizada = true;
     	} else {
     		throw new DevolverEx("Locacao ja finalizada.");
     	}
     }
     
+    @Override 
     public String toString(){
     	String finalizada = this.finalizada ? "Sim" : "Nao";
     	String toret;

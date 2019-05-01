@@ -30,13 +30,26 @@ public class Plataforma {
     }
 
     public void addJogo(Jogo j){
-        jogos.add(j);
+    	try{
+    		jogos.add(j);
+    	} catch (Exception ex){
+    		System.out.println("Erro: " + ex.getMessage());
+    	}
     }
     public void removeJogo(String nome){
-        for(int i=0; i<jogos.size(); i++){
-            if(jogos.get(i).getTitulo().equals(nome))
-                jogos.remove(i);
-        }
+    	try{
+	        for(int i=0; i<jogos.size(); i++){
+	            if(jogos.get(i).getTitulo().equals(nome))
+	                jogos.remove(i);
+	        }
+    	} catch (Exception ex){
+    		System.out.println("Erro: " + ex.getMessage());
+    	}
+    }
+    
+    @Override
+    public String toString(){
+    	return "Plataforma: " + this.getNome() + "\nQuantidade de jogos: " + this.jogos.size();
     }
     
 }
