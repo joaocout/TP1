@@ -1,0 +1,17 @@
+package test;
+
+import org.junit.*;
+import exception.*;
+import locadora.*;
+
+public class AlugarEx_Test {
+	
+	@Test(expected = exception.AlugarEx.class)
+	public void testAlugarEx() throws AlugarEx {
+		Plataforma p = new Plataforma("Playstation", 1.4f);
+		Jogo j = new Jogo("Crash", 2.00f, 0, p);
+		p.addJogo(j);
+		Locacao l = new Locacao(j, 5);
+		l.alugar();
+	}
+}
