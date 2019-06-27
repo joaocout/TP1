@@ -6,8 +6,13 @@ import exception.DevolverEx;
 
 import java.util.ArrayList;
 
+import java.sql.SQLException;
+
 public class Main {
-	public static void main(String[] args){
+	public static void main(String[] args) throws SQLException{
+		DBConn mysql_conn = new DBConn();
+		mysql_conn.connect();
+		
 		// Plataformas
 		ArrayList<Plataforma> plats = new ArrayList<Plataforma>();
 		Plataforma ps4 = new Plataforma("PlayStation 4", 1.3f);
@@ -31,6 +36,8 @@ public class Main {
 		Jogo rlx = new Jogo("Rocket League", 1.0f, 40, xbone);
 		Jogo gow = new Jogo("God of War", 2.5f, 12, ps4);
 		Jogo tlou = new Jogo("The Last of Us", 2.5f, 15, ps4);
+		
+		mysql_conn.addJogo(fifa19p4);
 		
 		// Add jogos aas plataformas
 		ps4.addJogo(fifa19p4);
@@ -93,6 +100,7 @@ public class Main {
 			System.out.println("Erro ao devolver: " + ex.getMessage());
 		}
 		
+		mysql_conn.close();
 		System.exit(0);
 	}
 }
