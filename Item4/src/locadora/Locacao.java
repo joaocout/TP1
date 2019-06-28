@@ -13,34 +13,46 @@ import exception.PrecoEx;
 
 public class Locacao implements Aluguel{
 
+	private int id; // primary key
     private String data_aluguel; //formato: 2015-04-12 (yyyy-mm-dd)
     private String data_devolucao;
     private String hora_aluguel; //formato: 23:20 (hh:mm)
     private String hora_devolucao;
     private double preco_final;
     private boolean finalizada;
-    private int protocolo;
     private Jogo game;
-    private static int base_protocol = 0;
     private int dias;
+    // ideia: colocar o cliente aqui, como no BD
 
     public Locacao(Jogo game, int dias){
     	this.data_aluguel = "0000-00-00";
     	this.data_devolucao = "0000-00-00";
         this.finalizada = false;
-        this.protocolo = generateProtocolo();
         this.game = game;
         this.dias = dias;
     }
-    
+    public Locacao(String data_aluguel, String data_devolucao, String hora_aluguel, String hora_devolucao, double preco_final, boolean finalizada, Jogo game, int dias){
+    	this.data_aluguel = data_aluguel;
+    	this.data_devolucao = data_devolucao;
+    	this.hora_aluguel = hora_aluguel;
+    	this.hora_devolucao = hora_devolucao;
+    	this.preco_final = preco_final;
+        this.finalizada = finalizada;
+        this.game = game;
+        this.dias = dias;
+    }
+    public void setID(int id) {
+    	this.id = id;
+    }
+    public int getID() {
+    	return this.id;
+    }
     public void setDias(int dias) {
     	this.dias = dias;
     }
-    
     public int getDias() {
     	return dias;
     }
-    
     public void setDataAluguel(String data_aluguel){
         this.data_aluguel = data_aluguel;
     }
@@ -65,12 +77,6 @@ public class Locacao implements Aluguel{
     public String getHoraDevolucao(){
         return hora_devolucao;
     }
-    public void setProtocolo(){
-        this.protocolo = generateProtocolo();
-    }
-    public int getProtocolo(){
-        return protocolo;
-    }
     public void setJogo(Jogo game){
         this.game = game;
     }
@@ -92,26 +98,6 @@ public class Locacao implements Aluguel{
 	        int ano=0, mes=0, dia=0;
 	
 	        int i = 0;
-	        /*for(String a: data_aluguel.split("\\-")){
-	            if(i==0){
-	                ano = Integer.valueOf(a);
-	                i++;
-	            }
-	            else if(i==1){
-	                mes = Integer.valueOf(a);
-	                i++;
-	            }
-	            else if(i==2){
-	                dia = Integer.valueOf(a);
-	                i++;
-	            }
-	        }
-	        LocalDate d_aluguel = LocalDate.of(ano, mes, dia);*/
-	        
-	        // Caso queira apenas o valor da divida ate entao (e nao tiver devolvido ainda)
-	        //if(!this.finalizada){
-	        //	this.data_devolucao = LocalDate.now().toString();
-	        //}
 	        
 	        i = 0;
 	        for(String a: data_devolucao.split("\\-")){
@@ -130,10 +116,6 @@ public class Locacao implements Aluguel{
 	        }
 	        LocalDate d_devolucao = LocalDate.of(ano, mes, dia);
 	        
-	        //long dias = ChronoUnit.DAYS.between(d_aluguel, d_devolucao);
-	
-	        //if(dias == 0) dias = 1;
-	        
 	        if(!finalizada && LocalDate.now().isAfter(d_devolucao)) {
 	        	long dias_atraso = ChronoUnit.DAYS.between(d_devolucao, LocalDate.now());
 	        	double multa = game.getPrecoBase()*game.getPlataforma().getCoeficiente()*dias_atraso*2;
@@ -146,11 +128,6 @@ public class Locacao implements Aluguel{
     	catch(Exception ex){
     		throw new PrecoEx("Erro ao calcular debito.");
     	}
-    }
-
-    private int generateProtocolo(){
-        base_protocol++;
-        return base_protocol;
     }
 
     public void alugar() throws AlugarEx {

@@ -5,9 +5,9 @@ import java.util.ArrayList;
 
 public class Plataforma {
 
-    private String nome;
+    private String nome; // primary key
     private double coeficiente;
-    private ArrayList<Jogo> jogos;
+    private ArrayList<Jogo> jogos;  // remover esses jogos daqui
     
     public Plataforma(String nome, double coeficiente){
         this.nome = nome;

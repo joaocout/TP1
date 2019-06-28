@@ -3,6 +3,7 @@ package locadora;
 
 public class Jogo{
     
+	private int id; // primary key
     private String titulo;
     private double preco_base;
     private int qtd;
@@ -14,7 +15,12 @@ public class Jogo{
         this.qtd = qtd;
         this.p = p;
     }
-
+    public void setID(int id) {
+    	this.id = id;
+    }
+    public int getID() {
+    	return this.id;
+    }
     public void setTitulo(String titulo){
         this.titulo = titulo;
     }

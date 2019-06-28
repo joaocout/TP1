@@ -37,7 +37,8 @@ public class Main {
 		Jogo gow = new Jogo("God of War", 2.5f, 12, ps4);
 		Jogo tlou = new Jogo("The Last of Us", 2.5f, 15, ps4);
 		
-		mysql_conn.addJogo(fifa19p4);
+		//mysql_conn.addJogo(fifa19p4);
+		System.out.println(mysql_conn.getPlat("PS4").toString());
 		
 		// Add jogos aas plataformas
 		ps4.addJogo(fifa19p4);
@@ -61,19 +62,19 @@ public class Main {
 			Locacao loc0 = new Locacao(fifa19p4, 14);
 			joao.addLocacao(loc0);
 			loc0.alugar();
-			System.out.println("Locacao realizada. Protocolo: " + loc0.getProtocolo());
+			System.out.println("Locacao realizada. Protocolo: " + loc0.getID());
 			System.out.println(loc0.toString());
 			
 			Locacao loc1 = new Locacao(gow, 7);
 			loc1.alugar();
 			joao.addLocacao(loc1);
-			System.out.println("Locacao realizada. Protocolo: " + loc1.getProtocolo());
+			System.out.println("Locacao realizada. Protocolo: " + loc1.getID());
 			System.out.println(loc1.toString());
 			
 			Locacao loc2 = new Locacao(rlx, 7);
 			loc2.alugar();
 			pedro.addLocacao(loc1);
-			System.out.println("Locacao realizada. Protocolo: " + loc2.getProtocolo());
+			System.out.println("Locacao realizada. Protocolo: " + loc2.getID());
 			System.out.println(loc2.toString());
 			
 			// Mostrar clientes
@@ -83,11 +84,11 @@ public class Main {
 			
 			// Devolver jogos
 			loc0.devolver();
-			System.out.println("Locacao #" + loc0.getProtocolo() + " finalizada.");
+			System.out.println("Locacao #" + loc0.getID() + " finalizada.");
 			loc1.devolver();
-			System.out.println("Locacao #" + loc1.getProtocolo() + " finalizada.");
+			System.out.println("Locacao #" + loc1.getID() + " finalizada.");
 			loc2.devolver();
-			System.out.println("Locacao #" + loc2.getProtocolo() + " finalizada.");
+			System.out.println("Locacao #" + loc2.getID() + " finalizada.");
 			
 
 			// Mostrar clientes novamente

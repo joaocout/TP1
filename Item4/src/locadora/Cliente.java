@@ -6,11 +6,11 @@ import java.util.ArrayList;
 public class Cliente{
 
     private String nome;
-    private String rg;
+    private String rg; // primary key
     private String cpf;
     private String email;
     private String telefone;
-    private ArrayList<Locacao> locacoes;
+    private ArrayList<Locacao> locacoes;  // ideia : remover essas locacoes daqui
 
     public Cliente(String nome, String rg, String cpf,
     String email, String telefone){
@@ -79,7 +79,7 @@ public class Cliente{
     	try{
 	        for(int i=0; i<locacoes.size(); i++){
 	            if(!locacoes.get(i).getFinalizada())
-	                System.out.println(locacoes.get(i).getProtocolo());
+	                System.out.println(locacoes.get(i).getID());
 	        }
     	} catch (Exception ex){
     		System.out.println(ex.getMessage());
