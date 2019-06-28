@@ -23,6 +23,7 @@ public class Locacao implements Aluguel{
     private Jogo game;
     private int dias;
     // ideia: colocar o cliente aqui, como no BD
+    private Cliente cliente; // adicionado mas nao implementado ainda
 
     public Locacao(Jogo game, int dias){
     	this.data_aluguel = "0000-00-00";
@@ -88,6 +89,12 @@ public class Locacao implements Aluguel{
     }
     public boolean getFinalizada(){
         return finalizada;
+    }
+    public Cliente getCliente() {
+    	return this.cliente;
+    }
+    public void setCliente(Cliente cli) {
+    	this.cliente = cli;
     }
 
     public double PrecoFinal() throws PrecoEx {

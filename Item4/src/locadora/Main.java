@@ -10,8 +10,6 @@ import java.sql.SQLException;
 
 public class Main {
 	public static void main(String[] args) throws SQLException{
-		DBConn mysql_conn = new DBConn();
-		mysql_conn.connect();
 		
 		// Plataformas
 		ArrayList<Plataforma> plats = new ArrayList<Plataforma>();
@@ -101,7 +99,6 @@ public class Main {
 			System.out.println("Erro ao devolver: " + ex.getMessage());
 		}
 		
-		mysql_conn.close();
 		System.exit(0);
 	}
 }
