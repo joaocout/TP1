@@ -1,16 +1,14 @@
 package locadora;
 
-
-import exception.AlugarEx;
-import exception.DevolverEx;
-
-import java.util.ArrayList;
-
 import java.sql.SQLException;
 
 public class Main {
 	public static void main(String[] args) throws SQLException{
-		
+		Locadora loc = new Locadora();
+		loc.cadastrar_plat();
+		loc.cadastrar_jogo();
+		loc.cadastrar_cliente();
+		/*
 		// Plataformas
 		ArrayList<Plataforma> plats = new ArrayList<Plataforma>();
 		Plataforma ps4 = new Plataforma("PlayStation 4", 1.3f);
@@ -98,7 +96,7 @@ public class Main {
 		} catch(DevolverEx ex){
 			System.out.println("Erro ao devolver: " + ex.getMessage());
 		}
-		
+		*/
 		System.exit(0);
 	}
 }

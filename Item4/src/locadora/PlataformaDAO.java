@@ -56,6 +56,7 @@ public class PlataformaDAO implements DAO<Plataforma, String>{
 			PreparedStatement smt = conn.prepareStatement(get_plat_sql);
 			smt.setString(1, NomePlat);
 			ResultSet rst = smt.executeQuery();
+			rst.next();
 			Plataforma plat = new Plataforma(rst.getString("NomePlat"), rst.getDouble("Coeficiente"));
 			smt.close();
 			rst.close();
@@ -67,21 +68,22 @@ public class PlataformaDAO implements DAO<Plataforma, String>{
 	}
 	
 	public ArrayList<Plataforma> getAll() {
+		ArrayList<Plataforma> plats = new ArrayList<Plataforma>();
 		try {
-			ArrayList<Plataforma> plats = new ArrayList<Plataforma>();
 			PreparedStatement smt = conn.prepareStatement(getall_plat_sql);
 			ResultSet rst = smt.executeQuery();
-			while(rst.next()) {
-				Plataforma plat = new Plataforma(rst.getString("NomePlat"), rst.getDouble("Coeficiente"));
-				plats.add(plat);
+			if(rst.next() == true) {
+				do {
+					Plataforma plat = new Plataforma(rst.getString("NomePlat"), rst.getDouble("Coeficiente"));
+					plats.add(plat);
+				} while(rst.next());
 			}
 			smt.close();
 			rst.close();
-			return plats;
 		} catch(SQLException e) {
 			e.printStackTrace();
-			return null;
 		}
+		return plats;
 	}
 	
 	public boolean update(Plataforma plat) {
@@ -98,4 +100,13 @@ public class PlataformaDAO implements DAO<Plataforma, String>{
 		}
 	}
 
+	public boolean close() {
+		try {
+			this.conn.close();
+			return true;
+		} catch(SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 }

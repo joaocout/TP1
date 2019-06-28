@@ -16,5 +16,13 @@ public class ConnFactory {
 			throw new RuntimeException(e);
 		}
 	}
+	
+	public void close(Connection conn) {
+		try {
+			conn.close();
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+	}
 
 }

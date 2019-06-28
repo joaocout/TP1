@@ -20,6 +20,9 @@ public class ClienteDAO implements DAO<Cliente, String>{
 	public ClienteDAO() {
 		this.conn = new ConnFactory().getConn();
 	}
+	public ClienteDAO(Connection c) {
+		this.conn = c;
+	}
 	
 	public boolean add(Cliente client) {
 		try {
@@ -56,6 +59,7 @@ public class ClienteDAO implements DAO<Cliente, String>{
 			PreparedStatement smt = conn.prepareStatement(get_cli_sql);
 			smt.setString(1, RG);
 			ResultSet rst = smt.executeQuery();
+			rst.next();
 			Cliente cli = new Cliente(rst.getString("Nome"),rst.getString("RG"),rst.getString("CPF"),rst.getString("email"),rst.getString("Telefone"));
 			smt.close();
 			rst.close();
@@ -67,21 +71,22 @@ public class ClienteDAO implements DAO<Cliente, String>{
 	}
 	
 	public ArrayList<Cliente> getAll() {
+		ArrayList<Cliente> clients = new ArrayList<Cliente>();
 		try {
-			ArrayList<Cliente> clients = new ArrayList<Cliente>();
 			PreparedStatement smt = conn.prepareStatement(getall_cli_sql);
 			ResultSet rst = smt.executeQuery();
-			while(rst.next()) {
-				Cliente cli = new Cliente(rst.getString("Nome"),rst.getString("RG"),rst.getString("CPF"),rst.getString("email"),rst.getString("Telefone"));
-				clients.add(cli);
+			if(rst.next() == true) {
+				do {
+					Cliente cli = new Cliente(rst.getString("Nome"),rst.getString("RG"),rst.getString("CPF"),rst.getString("email"),rst.getString("Telefone"));
+					clients.add(cli);
+				} while(rst.next());
 			}
 			smt.close();
 			rst.close();
-			return clients;
 		} catch(SQLException e) {
 			e.printStackTrace();
-			return null;
 		}
+		return clients;
 	}
 	
 	public boolean update(Cliente cli) {
@@ -101,4 +106,13 @@ public class ClienteDAO implements DAO<Cliente, String>{
 		}
 	}
 
+	public boolean close() {
+		try {
+			this.conn.close();
+			return true;
+		} catch(SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 }

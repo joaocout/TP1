@@ -21,6 +21,9 @@ public class LocacaoDAO implements DAO<Locacao, Integer>{
 	public LocacaoDAO() {
 		this.conn = new ConnFactory().getConn();
 	}
+	public LocacaoDAO(Connection c) {
+		this.conn = c;
+	}
 	
 	public boolean add(Locacao loc) {
 		try {
@@ -65,6 +68,7 @@ public class LocacaoDAO implements DAO<Locacao, Integer>{
 			smt.setInt(1, id);
 			ResultSet rst = smt.executeQuery();
 			JogoDAO jdao = new JogoDAO(conn);
+			rst.next();
 			Locacao loc = new Locacao(rst.getString("data_aluguel"), rst.getString("data_devolucao"), rst.getString("hora_aluguel"), rst.getString("hora_devolucao"), rst.getDouble("preco_final"), rst.getBoolean("finalizada"), jdao.get(rst.getInt("jogo_id")), rst.getInt("dias"));
 			smt.close();
 			rst.close();
@@ -76,22 +80,23 @@ public class LocacaoDAO implements DAO<Locacao, Integer>{
 	}
 	
 	public ArrayList<Locacao> getAll() {
+		ArrayList<Locacao> locs = new ArrayList<Locacao>();
 		try {
-			ArrayList<Locacao> locs = new ArrayList<Locacao>();
 			PreparedStatement smt = conn.prepareStatement(getall_loc_sql);
 			ResultSet rst = smt.executeQuery();
-			while(rst.next()) {
-				JogoDAO jdao = new JogoDAO(conn);
-				Locacao loc = new Locacao(rst.getString("data_aluguel"), rst.getString("data_devolucao"), rst.getString("hora_aluguel"), rst.getString("hora_devolucao"), rst.getDouble("preco_final"), rst.getBoolean("finalizada"), jdao.get(rst.getInt("jogo_id")), rst.getInt("dias"));
-				locs.add(loc);
+			if(rst.next() == true) {
+				do {
+					JogoDAO jdao = new JogoDAO(conn);
+					Locacao loc = new Locacao(rst.getString("data_aluguel"), rst.getString("data_devolucao"), rst.getString("hora_aluguel"), rst.getString("hora_devolucao"), rst.getDouble("preco_final"), rst.getBoolean("finalizada"), jdao.get(rst.getInt("jogo_id")), rst.getInt("dias"));
+					locs.add(loc);
+				} while(rst.next());
 			}
 			smt.close();
 			rst.close();
-			return locs;
 		}  catch(SQLException e) {
 			e.printStackTrace();
-			return null;
 		}
+		return locs;
 	}
 	
 	public boolean update(Locacao loc) {
@@ -119,4 +124,13 @@ public class LocacaoDAO implements DAO<Locacao, Integer>{
 		}
 	}
 
+	public boolean close() {
+		try {
+			this.conn.close();
+			return true;
+		} catch(SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 }

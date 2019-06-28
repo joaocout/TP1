@@ -1,12 +1,12 @@
 package locadora;
 
-import interfaces.DAO;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
+import interfaces.DAO;
 
 public class JogoDAO implements DAO<Jogo, Integer>{
 	
@@ -62,6 +62,7 @@ public class JogoDAO implements DAO<Jogo, Integer>{
 			smt.setInt(1, id);
 			ResultSet rst = smt.executeQuery();
 			PlataformaDAO pdao = new PlataformaDAO(conn);
+			rst.next();
 			Jogo jg = new Jogo(rst.getString("Titulo"), rst.getDouble("Preco_base"), rst.getInt("Quantidade"),pdao.get(rst.getString("Plataforma")));
 			smt.close();
 			rst.close();
@@ -74,22 +75,23 @@ public class JogoDAO implements DAO<Jogo, Integer>{
 	
 	//public ArrayList<Jogo> getAllJogos() throws SQLException {
 	public ArrayList<Jogo> getAll() {
+		ArrayList<Jogo> jogos = new ArrayList<Jogo>();
 		try {
-			ArrayList<Jogo> jogos = new ArrayList<Jogo>();
 			PreparedStatement smt = conn.prepareStatement(getall_jogo_sql);
 			ResultSet rst = smt.executeQuery();
-			while(rst.next()) {
-				PlataformaDAO pdao = new PlataformaDAO(conn);
-				Jogo newg = new Jogo(rst.getString("Titulo"),rst.getDouble("Preco_base"),rst.getInt("Quantidade"),pdao.get(rst.getString("Plataforma")));
-				jogos.add(newg);
+			PlataformaDAO pdao = new PlataformaDAO(conn);
+			if(rst.next() == true) {
+				do {
+					Jogo newg = new Jogo(rst.getString("Titulo"),rst.getDouble("Preco_base"),rst.getInt("Quantidade"),pdao.get(rst.getString("Plataforma")));
+					jogos.add(newg);
+				} while(rst.next());
 			}
 			smt.close();
 			rst.close();
-			return jogos;
 		}  catch(SQLException e) {
 			e.printStackTrace();
-			return null;
 		}
+		return jogos;
 	}
 	
 	//public void updateJogo(Jogo jogo) throws SQLException {
@@ -110,4 +112,13 @@ public class JogoDAO implements DAO<Jogo, Integer>{
 		}
 	}
 
+	public boolean close() {
+		try {
+			this.conn.close();
+			return true;
+		} catch(SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 }
