@@ -12,7 +12,7 @@ public class JogoDAO implements DAO<Jogo, Integer>{
 	
 	private Connection conn;
 	private String add_jogo_sql = "INSERT INTO Jogos (Titulo,Preco_base,Quantidade,Plataforma) VALUES (?,?,?,?)";
-	private String rm_jogo_sql = "DELETE FROM Jogos WHERE ID = ?";
+	private String rm_jogo_sql = "DELETE FROM Jogos WHERE Titulo = ? AND Plataforma = ?";
 	private String get_jogo_sql = "SELECT * FROM Jogos WHERE id = ?";
 	private String getall_jogo_sql = "SELECT * FROM Jogos";
 	private String upd_jogo_sql = "UPDATE Jogos SET Titulo = ?, Preco_base = ?, Quantidade = ?, Plataforma = ? WHERE id = ?";
@@ -45,7 +45,8 @@ public class JogoDAO implements DAO<Jogo, Integer>{
 	public boolean remove(Jogo jogo) {
 		try {
 			PreparedStatement smt = conn.prepareStatement(rm_jogo_sql);
-			smt.setInt(1, jogo.getID());
+			smt.setString(1, jogo.getTitulo());
+			smt.setString(2, jogo.getPlataforma().getNome());
 			smt.execute();
 			smt.close();
 			return true;
@@ -83,6 +84,7 @@ public class JogoDAO implements DAO<Jogo, Integer>{
 			if(rst.next() == true) {
 				do {
 					Jogo newg = new Jogo(rst.getString("Titulo"),rst.getDouble("Preco_base"),rst.getInt("Quantidade"),pdao.get(rst.getString("Plataforma")));
+					newg.setID(rst.getInt("id"));
 					jogos.add(newg);
 				} while(rst.next());
 			}

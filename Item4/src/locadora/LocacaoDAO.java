@@ -88,6 +88,7 @@ public class LocacaoDAO implements DAO<Locacao, Integer>{
 				do {
 					JogoDAO jdao = new JogoDAO(conn);
 					Locacao loc = new Locacao(rst.getString("data_aluguel"), rst.getString("data_devolucao"), rst.getString("hora_aluguel"), rst.getString("hora_devolucao"), rst.getDouble("preco_final"), rst.getBoolean("finalizada"), jdao.get(rst.getInt("jogo_id")), rst.getInt("dias"));
+					loc.setID(rst.getInt("id"));
 					locs.add(loc);
 				} while(rst.next());
 			}

@@ -11,8 +11,9 @@ public class Locadora {
 	private ArrayList<Plataforma> plataformas;
 	private ArrayList<Cliente> clientes;
 	private ArrayList<Locacao> locacoes;
+	private Scanner reader;
 	
-	public Locadora() {
+	public Locadora(Scanner reader) {
 		// Ao gerar objeto principal, recuperar todos os dados do database
 		// Usa apenas uma conexao para todos, nao necessitanto abrir varias
 		ConnFactory cf = new ConnFactory();
@@ -26,13 +27,13 @@ public class Locadora {
 		LocacaoDAO ldao = new LocacaoDAO(conn);
 		this.locacoes = ldao.getAll();
 		cf.close(conn);
+		this.reader = reader;
 	}
 	
 	public void cadastrar_plat() {
-		Scanner reader = new Scanner(System.in);
-		String nome = getstr("Nome da plataforma:", reader);
+		String nome = getstr("Nome da plataforma:");
 		if(search_plat(nome) == -1) {
-			double coef = getdbl("Coeficiente:", reader);
+			double coef = getdbl("Coeficiente:");
 			Plataforma plat = new Plataforma(nome, coef);
 			// Salva localmente
 			this.plataformas.add(plat);
@@ -46,17 +47,21 @@ public class Locadora {
 	}
 	
 	public void cadastrar_jogo() {
-		Scanner reader = new Scanner(System.in);
-		String titulo = getstr("Titulo:", reader);
-		double pbase = getdbl("Preco base:", reader);
-		int qtd = getint("Quantidade:", reader);
+		String titulo = getstr("Titulo:");
+		double pbase = getdbl("Preco base:");
+		int qtd = getint("Quantidade:");
 		
 		int platpos = search_plat("euro truck simulator");
 		// Pede plataforma ate ter uma existente
 		while(platpos == -1) {
-			String plat = getstr("Plataforma:", reader);
+			String plat = getstr("Plataforma:");
 			platpos = search_plat(plat);
 		}
+		if(search_gameplat(titulo,this.plataformas.get(platpos).getNome()) != -1) {
+			System.out.println("Jogo ja cadastrado.");
+			return;
+		}
+		
 		Jogo gm = new Jogo(titulo,pbase,qtd,plataformas.get(platpos));
 		// Salva no banco de dados
 		JogoDAO jdao = new JogoDAO();
@@ -70,18 +75,16 @@ public class Locadora {
 	}
 	
 	public void cadastrar_cliente() {
-		Scanner reader = new Scanner(System.in);
-
-		String nome = getstr("Nome: ", reader);
+		String nome = getstr("Nome:");
 		String rg = "0";
 		int rgc = 0;
 		while(rgc != -1) {
-			rg = getstr("RG: ", reader);
+			rg = getstr("RG: ");
 			rgc = search_client(rg);
 		}
-		String cpf = getstr("CPF: ", reader);
-		String email = getstr("E-mail:", reader);
-		String tel = getstr("Telefone:", reader);
+		String cpf = getstr("CPF: ");
+		String email = getstr("E-mail:");
+		String tel = getstr("Telefone:");
 		
 		// Salva localmente
 		Cliente cli = new Cliente(nome,rg,cpf,email,tel);
@@ -92,6 +95,81 @@ public class Locadora {
 		cdao.close();
 	}
 	
+	public boolean consulta_jogo() {
+		String gname = getstr("Nome do jogo:");
+		if(!this.jogos.isEmpty()) {
+			boolean found = false;
+			for(int i=0;i<this.jogos.size();i++) {
+				Jogo curr_gm = this.jogos.get(i);
+				if(curr_gm.getTitulo().equals(gname)) {
+					System.out.println("ID: " + curr_gm.getID() + " | Plataforma: " + curr_gm.getPlataforma().getNome() +
+							" | Quantidade: " + curr_gm.getQtd() + " | Preco/dia: R$" + (curr_gm.getPrecoBase() * curr_gm.getPlataforma().getCoeficiente()));
+					found = true;
+				}
+			}
+			if(found == false) {
+				System.out.println("Jogo nao cadastrado.");
+			}
+			return found;
+		} else {
+			System.out.println("Nenhum jogo cadastrado.");
+			return false;
+		}
+	}
+	
+	public boolean consulta_plat() {
+		String pname = getstr("Nome da plataforma:");
+		int pnumber = search_plat(pname);
+		if(pnumber != -1) {
+			Plataforma curr_plat = this.plataformas.get(pnumber);
+			if(!this.jogos.isEmpty()) {
+				boolean found = false;
+				for(int j=0;j<this.jogos.size();j++) {
+					Jogo curr_gm = this.jogos.get(j);
+					if(curr_gm.getPlataforma().getNome().equals(curr_plat.getNome())) {
+						System.out.println("ID: " + curr_gm.getID() + " | Titulo: " +
+										curr_gm.getTitulo() + " | Quantidade: " + curr_gm.getQtd() +
+										" | Preco/dia: R$" + (curr_gm.getPrecoBase() * curr_plat.getCoeficiente()));
+						found = true;
+					}
+				}
+				if(!found)
+					System.out.println("Nenhum jogo cadastrado para essa plataforma.");
+			} else
+				System.out.println("Nenhum jogo cadastrado.");
+			return true;
+		} else {
+			System.out.println("Plataforma nao encontrada.");
+			return false;
+		}
+	}
+	
+	public boolean consulta_cliente() {
+		String crg = getstr("RG do cliente:");
+		int nrg = search_client(crg);
+		if(nrg != 1) {
+			Cliente curr_c = this.clientes.get(nrg);
+			//for(int i=0;i<this.clientes.size();i++) {
+				if(curr_c.getRG().equals(crg)) {
+					System.out.println("Nome: " + curr_c.getNome());
+					System.out.println("CPF: " + curr_c.getCPF());
+					System.out.println("E-mail: " + curr_c.getEmail());
+					System.out.println("Telefone: " + curr_c.getTelefone());
+					System.out.println("Divida: R$" + curr_c.Divida());
+					System.out.println("Locacoes ativas: FAZER");
+				}
+			//}
+			return true;
+		} else {
+			System.out.println("Cliente nao encontrado.");
+			return false;
+		}
+	}
+	
+	/* ************************************************
+	 * Funcoes auxiliares
+	 * 
+	 **************************************************/
 	public int search_plat(String nome) {
 		if(!this.plataformas.isEmpty()) {
 			for(int i=0;i<this.plataformas.size();i++) {
@@ -106,27 +184,36 @@ public class Locadora {
 	public int search_client(String rg) {
 		if(!this.clientes.isEmpty()) {
 			for(int i=0;i<this.clientes.size();i++) {
-				if(this.clientes.get(i).getRG().equals(rg)){
+				if(this.clientes.get(i).getRG().equals(rg))
 					return i;
-				}
 			}
 		}
 		return -1;
 	}
 	
-	public String getstr(String txtin, Scanner reader) {
-		System.out.println(txtin);
-		return reader.nextLine();
+	public int search_gameplat(String titulo, String plat) {
+		if(!this.jogos.isEmpty()) {
+			for(int i=0;i<this.jogos.size();i++) {
+				if(this.jogos.get(i).getTitulo().equals(titulo) && this.jogos.get(i).getPlataforma().getNome().equals(plat))
+						return i;
+			}
+		}
+		return -1;
 	}
 	
-	public int getint(String txtin, Scanner reader) {
+	public String getstr(String txtin) {
 		System.out.println(txtin);
-		return reader.nextInt();
+		return this.reader.nextLine();
 	}
 	
-	public double getdbl(String txtin, Scanner reader) {
+	public int getint(String txtin) {
 		System.out.println(txtin);
-		return reader.nextDouble();
+		return this.reader.nextInt();
+	}
+	
+	public double getdbl(String txtin) {
+		System.out.println(txtin);
+		return this.reader.nextDouble();
 	}
 
 }

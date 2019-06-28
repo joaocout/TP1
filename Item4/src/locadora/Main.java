@@ -1,13 +1,21 @@
 package locadora;
 
 import java.sql.SQLException;
+import java.util.Scanner;
 
 public class Main {
 	public static void main(String[] args) throws SQLException{
-		Locadora loc = new Locadora();
-		loc.cadastrar_plat();
-		loc.cadastrar_jogo();
-		loc.cadastrar_cliente();
+		Scanner reader = new Scanner(System.in);
+		Locadora loc = new Locadora(reader);
+		
+		//loc.consulta_jogo();
+		loc.consulta_plat();
+		//loc.consulta_cliente();
+		//loc.cadastrar_plat();
+		//loc.cadastrar_jogo();
+		//loc.cadastrar_cliente();
+		
+		reader.close();
 		/*
 		// Plataformas
 		ArrayList<Plataforma> plats = new ArrayList<Plataforma>();
