@@ -38,7 +38,7 @@ public class Main {
 		Jogo tlou = new Jogo("The Last of Us", 2.5f, 15, ps4);
 		
 		//mysql_conn.addJogo(fifa19p4);
-		System.out.println(mysql_conn.getPlat("PS4").toString());
+		//System.out.println(mysql_conn.getPlat("PS4").toString());
 		
 		// Add jogos aas plataformas
 		ps4.addJogo(fifa19p4);
