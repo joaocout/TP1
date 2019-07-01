@@ -8,12 +8,14 @@ public class Main {
 		Scanner reader = new Scanner(System.in);
 		Locadora loc = new Locadora(reader);
 		
-		//loc.consulta_jogo();
-		loc.consulta_plat();
-		//loc.consulta_cliente();
 		//loc.cadastrar_plat();
 		//loc.cadastrar_jogo();
 		//loc.cadastrar_cliente();
+		//loc.consulta_jogo();
+		//loc.consulta_plat();
+		//loc.alugar_jogo();
+		//loc.consulta_cliente();
+		loc.devolver_jogo();
 		
 		reader.close();
 		/*

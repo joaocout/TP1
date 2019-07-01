@@ -65,6 +65,7 @@ public class JogoDAO implements DAO<Jogo, Integer>{
 			PlataformaDAO pdao = new PlataformaDAO(conn);
 			rst.next();
 			Jogo jg = new Jogo(rst.getString("Titulo"), rst.getDouble("Preco_base"), rst.getInt("Quantidade"),pdao.get(rst.getString("Plataforma")));
+			jg.setID(id);
 			smt.close();
 			rst.close();
 			return jg;

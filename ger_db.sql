@@ -27,10 +27,9 @@ CREATE TABLE IF NOT EXISTS `tp1`.`Locacoes` (
   `hora_devolucao` VARCHAR(45) NULL,
   `preco_final` DOUBLE NULL,
   `finalizada` TINYINT NULL,
-  `protocolo` INT NULL,
   `dias` INT NULL,
   `jogo_id` INT NULL,
-  `cliente_id` INT NULL,
+  `cliente_id` VARCHAR(45) NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 

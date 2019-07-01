@@ -68,8 +68,9 @@ public class LocacaoDAO implements DAO<Locacao, Integer>{
 			smt.setInt(1, id);
 			ResultSet rst = smt.executeQuery();
 			JogoDAO jdao = new JogoDAO(conn);
+			ClienteDAO cdao = new ClienteDAO(conn);
 			rst.next();
-			Locacao loc = new Locacao(rst.getString("data_aluguel"), rst.getString("data_devolucao"), rst.getString("hora_aluguel"), rst.getString("hora_devolucao"), rst.getDouble("preco_final"), rst.getBoolean("finalizada"), jdao.get(rst.getInt("jogo_id")), rst.getInt("dias"));
+			Locacao loc = new Locacao(rst.getString("data_aluguel"), rst.getString("data_devolucao"), rst.getString("hora_aluguel"), rst.getString("hora_devolucao"), rst.getDouble("preco_final"), rst.getBoolean("finalizada"), jdao.get(rst.getInt("jogo_id")), rst.getInt("dias"), cdao.get(rst.getString("cliente_id")));
 			smt.close();
 			rst.close();
 			return loc;
@@ -87,7 +88,8 @@ public class LocacaoDAO implements DAO<Locacao, Integer>{
 			if(rst.next() == true) {
 				do {
 					JogoDAO jdao = new JogoDAO(conn);
-					Locacao loc = new Locacao(rst.getString("data_aluguel"), rst.getString("data_devolucao"), rst.getString("hora_aluguel"), rst.getString("hora_devolucao"), rst.getDouble("preco_final"), rst.getBoolean("finalizada"), jdao.get(rst.getInt("jogo_id")), rst.getInt("dias"));
+					ClienteDAO cdao = new ClienteDAO(conn);
+					Locacao loc = new Locacao(rst.getString("data_aluguel"), rst.getString("data_devolucao"), rst.getString("hora_aluguel"), rst.getString("hora_devolucao"), rst.getDouble("preco_final"), rst.getBoolean("finalizada"), jdao.get(rst.getInt("jogo_id")), rst.getInt("dias"), cdao.get(rst.getString("cliente_id")));
 					loc.setID(rst.getInt("id"));
 					locs.add(loc);
 				} while(rst.next());

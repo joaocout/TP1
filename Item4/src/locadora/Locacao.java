@@ -22,17 +22,22 @@ public class Locacao implements Aluguel{
     private boolean finalizada;
     private Jogo game;
     private int dias;
-    // ideia: colocar o cliente aqui, como no BD
     private Cliente cliente; // adicionado mas nao implementado ainda
 
-    public Locacao(Jogo game, int dias){
+    public Locacao(Jogo game, int dias, Cliente cliente){
     	this.data_aluguel = "0000-00-00";
     	this.data_devolucao = "0000-00-00";
         this.finalizada = false;
         this.game = game;
         this.dias = dias;
+        this.cliente = cliente;
+        try {
+        	this.alugar();
+        } catch(AlugarEx e) {
+        	e.printStackTrace();
+        }
     }
-    public Locacao(String data_aluguel, String data_devolucao, String hora_aluguel, String hora_devolucao, double preco_final, boolean finalizada, Jogo game, int dias){
+    public Locacao(String data_aluguel, String data_devolucao, String hora_aluguel, String hora_devolucao, double preco_final, boolean finalizada, Jogo game, int dias, Cliente cliente){
     	this.data_aluguel = data_aluguel;
     	this.data_devolucao = data_devolucao;
     	this.hora_aluguel = hora_aluguel;
@@ -41,6 +46,7 @@ public class Locacao implements Aluguel{
         this.finalizada = finalizada;
         this.game = game;
         this.dias = dias;
+        this.cliente = cliente;
     }
     public void setID(int id) {
     	this.id = id;
@@ -161,6 +167,7 @@ public class Locacao implements Aluguel{
     		if(data_aluguel.equals("0000-00-00")){
         		throw new DevolverEx("Ainda nao ha uma data de aluguel definida.");
     		} else {
+    			data_devolucao = LocalDate.now().toString();
 		        hora_devolucao = LocalTime.now().withSecond(0).withNano(0).toString();
 		        game.addQtd();
 		        this.finalizada = true;
@@ -181,8 +188,7 @@ public class Locacao implements Aluguel{
     	} catch(PrecoEx ex){
     		pfinal = ex.getMessage(); 
     	}
-		toret = "Jogo: " + game.getTitulo() + "\nPreco atual: " + pfinal + "\nFinalizada: " + finalizada + "\n";
+		toret = "Protocolo: " + id + " | Jogo: " + game.getTitulo() + " | Plataforma: " + game.getPlataforma().getNome() + " | Preco atual: R$" + pfinal + " | Finalizada: " + finalizada;
     	return toret;
     }
-    
 }

@@ -5,6 +5,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import exception.AlugarEx;
+import exception.DevolverEx;
+import exception.PrecoEx;
+
 public class Locadora {
 
 	private ArrayList<Jogo> jogos;
@@ -42,7 +46,7 @@ public class Locadora {
 			pdao.add(plat);
 			pdao.close();
 		} else {
-			System.out.println("Plataforma ja cadastrada");
+			sysmsg("Plataforma ja cadastrada");
 		}
 	}
 	
@@ -58,19 +62,21 @@ public class Locadora {
 			platpos = search_plat(plat);
 		}
 		if(search_gameplat(titulo,this.plataformas.get(platpos).getNome()) != -1) {
-			System.out.println("Jogo ja cadastrado.");
+			sysmsg("Jogo ja cadastrado.");
 			return;
 		}
 		
 		Jogo gm = new Jogo(titulo,pbase,qtd,plataformas.get(platpos));
 		// Salva no banco de dados
 		JogoDAO jdao = new JogoDAO();
-		jdao.add(gm);
 		
-		// Salva localmente (com o id)
-		this.jogos.clear();
-		this.jogos = jdao.getAll();
-		
+		if(jdao.add(gm)) {
+			// Salva localmente (com o id)
+			this.jogos.clear();
+			this.jogos = jdao.getAll();
+		} else {
+			sysmsg("Erro ao cadastrar jogo.");
+		}
 		jdao.close();
 	}
 	
@@ -95,6 +101,92 @@ public class Locadora {
 		cdao.close();
 	}
 	
+	public boolean alugar_jogo() {
+		boolean flag = false;
+		
+		String crg = getstr("RG do cliente:");
+		int client_num = search_client(crg);
+		// Se o cliente nao for encontrado
+		if(client_num == -1) {
+			sysmsg("Cliente nao cadastrado.");
+			return false;
+		}
+		int dias = getint("Tempo (dias) de aluguel:");
+		int gmid = getint("ID do jogo:");
+		for(int i=0;i<this.jogos.size();i++) {
+			Jogo gmused = this.jogos.get(i);
+			if(gmused.getID() == gmid && gmused.getQtd() > 0) {
+				flag = true;
+				Cliente cused = this.clientes.get(client_num);
+				Locacao loc = new Locacao(gmused, dias, cused);
+				LocacaoDAO ldao = new LocacaoDAO();
+				if(ldao.add(loc)){
+					// Atualizar lista dos jogos (-1)
+					gmused.subQtd();
+					JogoDAO gdao = new JogoDAO();
+					gdao.update(gmused);
+					this.jogos.clear();
+					this.jogos = gdao.getAll();
+					gdao.close();
+					// Atualiza lista das locacoes
+					this.locacoes.clear();
+					this.locacoes = ldao.getAll();
+					int protocol = this.locacoes.get(this.locacoes.size()-1).getID();
+					sysmsg("Aluguel realizado com sucesso. Protocolo: " + protocol);
+				} else {
+					sysmsg("Erro ao realizar o aluguel.");
+				}
+				ldao.close();
+				break;
+			}
+		}
+		return flag;
+	}
+	
+	public boolean devolver_jogo() {
+		boolean flag = false;
+		String crg = getstr("RG do cliente:");
+		int cnum = search_client(crg);
+		if(cnum == -1) {
+			sysmsg("Cliente nao cadastrado.");
+			return false;
+		}
+		print_cli_loc(crg); // imprime locacoes do cliente
+		int locnum = getint("Protocolo da locacao:");
+		for(int i=0;i<this.locacoes.size();i++) {
+			Locacao loc = this.locacoes.get(i);
+			if(loc.getID() == locnum && loc.getFinalizada() == false) {
+				flag = true;
+				try {
+					loc.devolver();
+				} catch(DevolverEx e) {
+					e.printStackTrace();
+				}
+				LocacaoDAO ldao = new LocacaoDAO();
+				if(ldao.update(loc)) {
+					// Atualizar lista de jogos (+1)
+					Jogo gmused = loc.getJogo();
+					gmused.addQtd();
+					JogoDAO gdao = new JogoDAO();
+					gdao.update(gmused);
+					this.jogos.clear();
+					this.jogos = gdao.getAll();
+					gdao.close();
+					// Atualizar lista de locacoes
+					this.locacoes.clear();
+					this.locacoes = ldao.getAll();
+					sysmsg("Jogo devolvido com sucesso. Obrigado!");
+				} else {
+					sysmsg("Erro ao devolver jogo.");
+				}
+				ldao.close();
+				break;
+			}
+		}
+		
+		return flag;
+	}
+	
 	public boolean consulta_jogo() {
 		String gname = getstr("Nome do jogo:");
 		if(!this.jogos.isEmpty()) {
@@ -107,12 +199,12 @@ public class Locadora {
 					found = true;
 				}
 			}
-			if(found == false) {
-				System.out.println("Jogo nao cadastrado.");
+			if(!found) {
+				sysmsg("Jogo nao cadastrado.");
 			}
 			return found;
 		} else {
-			System.out.println("Nenhum jogo cadastrado.");
+			sysmsg("Nenhum jogo cadastrado.");
 			return false;
 		}
 	}
@@ -134,12 +226,12 @@ public class Locadora {
 					}
 				}
 				if(!found)
-					System.out.println("Nenhum jogo cadastrado para essa plataforma.");
+					sysmsg("Nenhum jogo cadastrado para essa plataforma.");
 			} else
-				System.out.println("Nenhum jogo cadastrado.");
+				sysmsg("Nenhum jogo cadastrado.");
 			return true;
 		} else {
-			System.out.println("Plataforma nao encontrada.");
+			sysmsg("Plataforma nao encontrada.");
 			return false;
 		}
 	}
@@ -149,21 +241,38 @@ public class Locadora {
 		int nrg = search_client(crg);
 		if(nrg != 1) {
 			Cliente curr_c = this.clientes.get(nrg);
-			//for(int i=0;i<this.clientes.size();i++) {
-				if(curr_c.getRG().equals(crg)) {
-					System.out.println("Nome: " + curr_c.getNome());
-					System.out.println("CPF: " + curr_c.getCPF());
-					System.out.println("E-mail: " + curr_c.getEmail());
-					System.out.println("Telefone: " + curr_c.getTelefone());
-					System.out.println("Divida: R$" + curr_c.Divida());
-					System.out.println("Locacoes ativas: FAZER");
-				}
-			//}
+			if(curr_c.getRG().equals(crg)) {
+				System.out.println("Nome: " + curr_c.getNome());
+				System.out.println("CPF: " + curr_c.getCPF());
+				System.out.println("E-mail: " + curr_c.getEmail());
+				System.out.println("Telefone: " + curr_c.getTelefone());
+				//System.out.println("Divida: R$" + curr_c.Divida());
+				print_cli_loc(curr_c.getRG());
+			}
 			return true;
 		} else {
-			System.out.println("Cliente nao encontrado.");
+			sysmsg("Cliente nao encontrado.");
 			return false;
 		}
+	}
+	
+	public void print_cli_loc(String cli_rg) {
+		int ncli = search_client(cli_rg);
+		if(ncli == -1) {
+			sysmsg("Cliente nao encontrado.");
+			return;
+		}
+		boolean flag = false;
+		System.out.println("Locacoes ativas:");
+		for(int i=0;i<this.locacoes.size();i++) {
+			Locacao loc = this.locacoes.get(i);
+			if(loc.getCliente().getRG().equals(cli_rg) && !loc.getFinalizada()) {
+				flag = true;
+				System.out.println(loc.toString());
+			}
+		}
+		if(flag == false)
+			System.out.println("Sem locacoes ativas.");
 	}
 	
 	/* ************************************************
@@ -215,5 +324,10 @@ public class Locadora {
 		System.out.println(txtin);
 		return this.reader.nextDouble();
 	}
-
+	
+	private void sysmsg(String msg) {
+		System.out.println("-----------------------------------------------");
+		System.out.println(msg);
+		System.out.println("-----------------------------------------------");
+	}
 }

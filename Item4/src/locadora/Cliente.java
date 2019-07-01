@@ -1,8 +1,5 @@
 package locadora;
 
-
-import java.util.ArrayList;
-
 public class Cliente{
 
     private String nome;
@@ -10,7 +7,6 @@ public class Cliente{
     private String cpf;
     private String email;
     private String telefone;
-    private ArrayList<Locacao> locacoes;  // ideia : remover essas locacoes daqui
 
     public Cliente(String nome, String rg, String cpf,
     String email, String telefone){
@@ -19,7 +15,6 @@ public class Cliente{
         this.cpf = cpf;
         this.email = email;
         this.telefone = telefone;
-        locacoes = new ArrayList<Locacao>();
     }
 
     public void setNome (String nome){
@@ -52,11 +47,8 @@ public class Cliente{
     public String getTelefone(){
         return telefone;
     }
-    public ArrayList<Locacao> getLocacoes(){
-    	return this.locacoes;
-    }
     
-    public double Divida(){
+    /*public double Divida(){
         double divida = 0f;
         try{
 	        for(int i=0; i<locacoes.size(); i++){
@@ -67,29 +59,11 @@ public class Cliente{
         	System.out.println(ex.getMessage());
         }
         return divida;
-    }
-    public void addLocacao(Locacao l) {
-    	try{
-    		locacoes.add(l);
-    	} catch(Exception ex){
-    		System.out.println(ex.getMessage());
-    	}
-    }
-    public void listLocacoesAtivas(){
-    	try{
-	        for(int i=0; i<locacoes.size(); i++){
-	            if(!locacoes.get(i).getFinalizada())
-	                System.out.println(locacoes.get(i).getID());
-	        }
-    	} catch (Exception ex){
-    		System.out.println(ex.getMessage());
-    	}
-    }
+    }*/
     
     @Override
     public String toString(){
     	return "Nome: " + this.getNome() + "\nRG: " + this.getRG() + "\nCPF: " + this.getCPF() 
-    			+ "\nEmail: " + this.getEmail() + "\nTelefone: " + this.getTelefone() + "\nDivida: " + Divida() 
-    			+ "\nTotal locacoes feitas: " + this.locacoes.size() + "\n";
+    			+ "\nEmail: " + this.getEmail() + "\nTelefone: " + this.getTelefone();
     }
 }
