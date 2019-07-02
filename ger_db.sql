@@ -10,13 +10,12 @@ CREATE TABLE IF NOT EXISTS `tp1`.`Clientes` (
 ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `tp1`.`Jogos` (
-  `id` INT NULL AUTO_INCREMENT,
-  `Titulo` VARCHAR(45) NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `Titulo` VARCHAR(45) NULL,
   `Preco_base` DOUBLE NULL,
   `Quantidade` INT NULL,
-  `Plataforma` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`Titulo`, `Plataforma`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
+  `Plataforma` VARCHAR(45) NULL,
+  PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `tp1`.`Locacoes` (
