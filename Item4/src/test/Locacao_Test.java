@@ -24,9 +24,9 @@ public class Locacao_Test {
 		Plataforma ps4 = new Plataforma("Playstation 4", 0.5f); 
 		
 		Jogo rl = new Jogo ("Rocket League", 1.50f, 5, ps4);
-		ps4.addJogo(rl);
-		
-		Locacao loc = new Locacao(rl, 28);
+		//ps4.addJogo(rl);
+		Cliente jao = new Cliente("João", "1234555", "09807605412", "joao@gmail.com", "988888888");
+		Locacao loc = new Locacao(rl, 28, jao);
 		loc.alugar();
 		
 		Assert.assertEquals(21, loc.PrecoFinal(), 0.001f);
@@ -37,9 +37,9 @@ public class Locacao_Test {
 		Plataforma ps4 = new Plataforma("Playstation 4", 0.5f); 
 		
 		Jogo rl = new Jogo ("Rocket League", 1.50f, 5, ps4);
-		ps4.addJogo(rl);
-		
-		Locacao loc = new Locacao(rl, 28);
+		//ps4.addJogo(rl);
+		Cliente jao = new Cliente("João", "1234555", "09807605412", "joao@gmail.com", "988888888");
+		Locacao loc = new Locacao(rl, 28, jao);
 		loc.alugar();
 		Assert.assertEquals("Um ou mais atributos do obj. nao correspondem com o esperado",
 				LocalDate.now().toString(),loc.getDataAluguel());
@@ -50,9 +50,9 @@ public class Locacao_Test {
 		Plataforma ps4 = new Plataforma("Playstation 4", 0.5f); 
 		
 		Jogo rl = new Jogo ("Rocket League", 1.50f, 5, ps4);
-		ps4.addJogo(rl);
-		
-		Locacao loc = new Locacao(rl, 28);
+		//ps4.addJogo(rl);
+		Cliente jao = new Cliente("João", "1234555", "09807605412", "joao@gmail.com", "988888888");
+		Locacao loc = new Locacao(rl, 28, jao);
 		loc.alugar();
 		loc.devolver();
 		Assert.assertEquals("Um ou mais atributos do obj. nao correspondem com o esperado",
