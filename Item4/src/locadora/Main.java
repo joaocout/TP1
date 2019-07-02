@@ -15,7 +15,8 @@ public class Main {
 		//loc.consulta_plat();
 		//loc.alugar_jogo();
 		//loc.consulta_cliente();
-		loc.devolver_jogo();
+		//loc.devolver_jogo();
+		//loc.consulta_cliente();
 		
 		reader.close();
 		/*

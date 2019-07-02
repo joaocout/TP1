@@ -60,7 +60,9 @@ public class Jogo{
     
     @Override
     public String toString(){
-    	return "Titulo: " + this.getTitulo() + "\nPlataforma: " + this.p.getNome() + "\nQuantidade: " + this.getQtd();
+    	return "ID: " + this.getID() + " | Titulo: " +
+				this.getTitulo() + " | Plataforma: " + this.getPlataforma().getNome() + " | Quantidade: " + this.getQtd() +
+				" | Preco/dia: R$" + (this.getPrecoBase() * this.getPlataforma().getCoeficiente());
     }
     
 }

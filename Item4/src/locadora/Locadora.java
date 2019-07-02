@@ -1,11 +1,9 @@
 package locadora;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import exception.AlugarEx;
 import exception.DevolverEx;
 import exception.PrecoEx;
 
@@ -194,8 +192,7 @@ public class Locadora {
 			for(int i=0;i<this.jogos.size();i++) {
 				Jogo curr_gm = this.jogos.get(i);
 				if(curr_gm.getTitulo().equals(gname)) {
-					System.out.println("ID: " + curr_gm.getID() + " | Plataforma: " + curr_gm.getPlataforma().getNome() +
-							" | Quantidade: " + curr_gm.getQtd() + " | Preco/dia: R$" + (curr_gm.getPrecoBase() * curr_gm.getPlataforma().getCoeficiente()));
+					System.out.println(curr_gm.toString());
 					found = true;
 				}
 			}
@@ -219,9 +216,7 @@ public class Locadora {
 				for(int j=0;j<this.jogos.size();j++) {
 					Jogo curr_gm = this.jogos.get(j);
 					if(curr_gm.getPlataforma().getNome().equals(curr_plat.getNome())) {
-						System.out.println("ID: " + curr_gm.getID() + " | Titulo: " +
-										curr_gm.getTitulo() + " | Quantidade: " + curr_gm.getQtd() +
-										" | Preco/dia: R$" + (curr_gm.getPrecoBase() * curr_plat.getCoeficiente()));
+						System.out.println(curr_gm.toString());
 						found = true;
 					}
 				}
@@ -239,15 +234,12 @@ public class Locadora {
 	public boolean consulta_cliente() {
 		String crg = getstr("RG do cliente:");
 		int nrg = search_client(crg);
-		if(nrg != 1) {
+		if(nrg != -1) {
 			Cliente curr_c = this.clientes.get(nrg);
 			if(curr_c.getRG().equals(crg)) {
-				System.out.println("Nome: " + curr_c.getNome());
-				System.out.println("CPF: " + curr_c.getCPF());
-				System.out.println("E-mail: " + curr_c.getEmail());
-				System.out.println("Telefone: " + curr_c.getTelefone());
-				//System.out.println("Divida: R$" + curr_c.Divida());
-				print_cli_loc(curr_c.getRG());
+				System.out.println(curr_c.toString());
+				System.out.println("Divida: R$ " + print_cli_debt(crg));
+				print_cli_loc(crg);
 			}
 			return true;
 		} else {
@@ -256,7 +248,63 @@ public class Locadora {
 		}
 	}
 	
-	public void print_cli_loc(String cli_rg) {
+	/* ************************************************
+	 * Funcoes auxiliares
+	 * 
+	 **************************************************/
+	private int search_plat(String nome) {
+		if(!this.plataformas.isEmpty()) {
+			for(int i=0;i<this.plataformas.size();i++) {
+				if(this.plataformas.get(i).getNome().equals(nome)){
+					return i;
+				}
+			}
+		}
+		return -1;
+	}
+	
+	private int search_client(String rg) {
+		if(!this.clientes.isEmpty()) {
+			for(int i=0;i<this.clientes.size();i++) {
+				if(this.clientes.get(i).getRG().equals(rg))
+					return i;
+			}
+		}
+		return -1;
+	}
+	
+	private int search_gameplat(String titulo, String plat) {
+		if(!this.jogos.isEmpty()) {
+			for(int i=0;i<this.jogos.size();i++) {
+				if(this.jogos.get(i).getTitulo().equals(titulo) && this.jogos.get(i).getPlataforma().getNome().equals(plat))
+						return i;
+			}
+		}
+		return -1;
+	}
+	
+	private String getstr(String txtin) {
+		System.out.println(txtin);
+		return this.reader.nextLine();
+	}
+	
+	private int getint(String txtin) {
+		System.out.println(txtin);
+		return this.reader.nextInt();
+	}
+	
+	private double getdbl(String txtin) {
+		System.out.println(txtin);
+		return this.reader.nextDouble();
+	}
+	
+	private void sysmsg(String msg) {
+		System.out.println("-----------------------------------------------");
+		System.out.println(msg);
+		System.out.println("-----------------------------------------------");
+	}
+	
+	private void print_cli_loc(String cli_rg) {
 		int ncli = search_client(cli_rg);
 		if(ncli == -1) {
 			sysmsg("Cliente nao encontrado.");
@@ -275,59 +323,23 @@ public class Locadora {
 			System.out.println("Sem locacoes ativas.");
 	}
 	
-	/* ************************************************
-	 * Funcoes auxiliares
-	 * 
-	 **************************************************/
-	public int search_plat(String nome) {
-		if(!this.plataformas.isEmpty()) {
-			for(int i=0;i<this.plataformas.size();i++) {
-				if(this.plataformas.get(i).getNome().equals(nome)){
-					return i;
+	private float print_cli_debt(String cli_rg) {
+		int ncli = search_client(cli_rg);
+		float ret = 0f;
+		if(ncli == -1) {
+			sysmsg("Cliente nao encontrado.");
+			return ret;
+		}
+		for(int i=0;i<this.locacoes.size();i++) {
+			Locacao loc = this.locacoes.get(i);
+			if(loc.getCliente().getRG().equals(cli_rg) && !loc.getFinalizada()) {
+				try {
+					ret += loc.PrecoFinal();
+				} catch(PrecoEx e) {
+					e.printStackTrace();
 				}
 			}
 		}
-		return -1;
-	}
-	
-	public int search_client(String rg) {
-		if(!this.clientes.isEmpty()) {
-			for(int i=0;i<this.clientes.size();i++) {
-				if(this.clientes.get(i).getRG().equals(rg))
-					return i;
-			}
-		}
-		return -1;
-	}
-	
-	public int search_gameplat(String titulo, String plat) {
-		if(!this.jogos.isEmpty()) {
-			for(int i=0;i<this.jogos.size();i++) {
-				if(this.jogos.get(i).getTitulo().equals(titulo) && this.jogos.get(i).getPlataforma().getNome().equals(plat))
-						return i;
-			}
-		}
-		return -1;
-	}
-	
-	public String getstr(String txtin) {
-		System.out.println(txtin);
-		return this.reader.nextLine();
-	}
-	
-	public int getint(String txtin) {
-		System.out.println(txtin);
-		return this.reader.nextInt();
-	}
-	
-	public double getdbl(String txtin) {
-		System.out.println(txtin);
-		return this.reader.nextDouble();
-	}
-	
-	private void sysmsg(String msg) {
-		System.out.println("-----------------------------------------------");
-		System.out.println(msg);
-		System.out.println("-----------------------------------------------");
+		return ret;
 	}
 }
