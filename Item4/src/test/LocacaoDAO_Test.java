@@ -7,7 +7,6 @@ public class LocacaoDAO_Test {
 
 	@Test
 	public void testLocacaoDAOadd() {
-		
 		LocacaoDAO ldao = new LocacaoDAO();
 		Cliente joao = new Cliente("Joao", "3555888", "09807605420", "joao@joao.com", "988888888");
 		Plataforma pc = new Plataforma("PC", 1.1);

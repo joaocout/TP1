@@ -1,6 +1,5 @@
 package locadora;
 
-
 public class Jogo{
     
 	private int id; // primary key
@@ -27,30 +26,24 @@ public class Jogo{
     public String getTitulo(){
         return titulo;
     }
-    
     public void setPrecoBase(double preco){
         this.preco_base = preco;
     }
     public double getPrecoBase(){
         return preco_base;
     }
-
     public void setQtd(int qtd){
         this.qtd = qtd;
     }
-
     public int getQtd(){
         return qtd;
     }
-
     public void addQtd(){
         qtd++;
     }
-
     public void subQtd(){
         qtd--;
     }
-
     public void setPlataforma(Plataforma p){
         this.p = p;
     }

@@ -48,19 +48,6 @@ public class Cliente{
         return telefone;
     }
     
-    /*public double Divida(){
-        double divida = 0f;
-        try{
-	        for(int i=0; i<locacoes.size(); i++){
-	            if(!locacoes.get(i).getFinalizada())
-	                divida+=locacoes.get(i).PrecoFinal();
-	        }
-        } catch(Exception ex){
-        	System.out.println(ex.getMessage());
-        }
-        return divida;
-    }*/
-    
     @Override
     public String toString(){
     	return "Nome: " + this.getNome() + "\nRG: " + this.getRG() + "\nCPF: " + this.getCPF() 

@@ -182,13 +182,16 @@ public class Locacao implements Aluguel{
     public String toString(){
     	String finalizada = this.finalizada ? "Sim" : "Nao";
     	String toret;
-    	String pfinal = "";
+    	double pfinal = 0;
+    	String _pfinal = "0";
     	try{
     		pfinal += PrecoFinal();
     	} catch(PrecoEx ex){
-    		pfinal = ex.getMessage(); 
+    		_pfinal = ex.getMessage();
     	}
-		toret = "Protocolo: " + id + " | Jogo: " + game.getTitulo() + " | Plataforma: " + game.getPlataforma().getNome() + " | Preco atual: R$" + pfinal + " | Finalizada: " + finalizada;
+    	if(pfinal != 0f)
+    		_pfinal = String.format("%.2f", pfinal);
+		toret = "Protocolo: " + this.id + " | Jogo: " + game.getTitulo() + " | Plataforma: " + game.getPlataforma().getNome() + " | Preco atual: R$" + _pfinal + " | Finalizada: " + finalizada;
     	return toret;
     }
 }

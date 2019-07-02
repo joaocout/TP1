@@ -40,7 +40,7 @@ public class ClienteDAO_Test {
 		cdao.add(joao);
 		joao.setTelefone("900001212");
 		cdao.update(joao);
-		Assert.assertEquals("Houve uma falha no update do banco de dados", "900001212", cdao.get("35555555").getTelefone());
+		Assert.assertEquals("Houve uma falha no update do banco de dados", "900001212", cdao.get("3555555").getTelefone());
 		
 		cdao.remove(joao);
 		cdao.close();

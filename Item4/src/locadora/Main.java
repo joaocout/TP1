@@ -7,20 +7,19 @@ public class Main {
 		
 	//pula linhas e seta o cursor para a primeira linha, primeira coluna
 	public static void ClearScreen() {
-		System.out.print("\033[H\033[2J");
-        	System.out.flush();
-	}	
+		for (int i = 0; i < 30; ++i) System.out.println();
+	}
 
 	public static void main(String[] args) throws SQLException{
 		Scanner reader = new Scanner(System.in);
 		Locadora loc = new Locadora(reader);
 		
-		//menu
+		// menu
 		int op = 0;
 		Scanner in = new Scanner(System.in);
 		while(op!=9) {
 			ClearScreen();
-			System.out.println("-------|Menu-------\n");
+			System.out.println("-------Menu-------\n");
 			System.out.println("[1] - Cadastrar");
 			System.out.println("[2] - Consultar");
 			System.out.println("[3] - Alugar");
@@ -28,10 +27,13 @@ public class Main {
 			System.out.println("[9] - Sair");
 			System.out.println("Escolha uma opção: ");
 			
-			op = in.nextInt();
+			if(in.hasNextInt())
+				op = in.nextInt();
+			else
+				in.nextLine();
 			
 			if(op == 1) {
-				ClearScreen();
+				//ClearScreen();
 				System.out.println("-------Cadastro-------\n");
 				System.out.println("[1] - Cadastrar plataforma");
 				System.out.println("[2] - Cadastrar jogo");
@@ -40,9 +42,10 @@ public class Main {
 				
 				op = in.nextInt();
 				if(op == 1) {
-					ClearScreen();
+					//ClearScreen();
 					loc.cadastrar_plat();
 					System.out.println("\nPressione ENTER para retornar");
+					in.nextLine();
 					in.nextLine();
 				}
 				else if(op == 2) {
@@ -50,16 +53,18 @@ public class Main {
 					loc.cadastrar_jogo();
 					System.out.println("\nPressione ENTER para retornar");
 					in.nextLine();
+					in.nextLine();
 				}
 				else if(op == 3) {
 					ClearScreen();
 					loc.cadastrar_cliente();
 					System.out.println("\nPressione ENTER para retornar");
 					in.nextLine();
+					in.nextLine();
 				}
 			}
 			else if(op == 2) {
-				ClearScreen();
+				//ClearScreen();
 				System.out.println("-------Consulta-------\n");
 				System.out.println("[1] - Consultar plataforma");
 				System.out.println("[2] - Consultar jogo");
@@ -68,139 +73,47 @@ public class Main {
 				
 				op = in.nextInt();
 				if(op == 1) {
-					ClearScreen();
+					//ClearScreen();
 					loc.consulta_plat();
 					System.out.println("\nPressione ENTER para retornar");
 					in.nextLine();
+					in.nextLine();
 				}
 				if(op == 2) {
-					ClearScreen();
+					//ClearScreen();
 					loc.consulta_jogo();
 					System.out.println("\nPressione ENTER para retornar");
 					in.nextLine();
+					in.nextLine();
 				}
 				if(op == 3) {
-					ClearScreen();
+					//ClearScreen();
 					loc.consulta_cliente();
 					System.out.println("\nPressione ENTER para retornar");
+					in.nextLine();
 					in.nextLine();
 				}
 			}
 			else if(op==3){
-				ClearScreen();
+				//ClearScreen();
 				loc.alugar_jogo();
 				System.out.println("\nPressione ENTER para retornar");
+				in.nextLine();
+				in.nextLine();
 			}
 			else if(op==4){
-				ClearScreen();
+				//ClearScreen();
 				loc.devolver_jogo();
 				System.out.println("\nPressione ENTER para retornar");
+				in.nextLine();
+				in.nextLine();
 			}
 			else if (op==9) {
-				ClearScreen();
+				//ClearScreen();
 				in.close();
 			}
-		}		
-
-		//loc.cadastrar_plat();
-		//loc.cadastrar_jogo();
-		//loc.cadastrar_cliente();
-		//loc.consulta_jogo();
-		//loc.consulta_plat();
-		//loc.consulta_cliente();		
-		//loc.alugar_jogo();
-		//loc.devolver_jogo();
-		
-		reader.close();
-		/*
-		// Plataformas
-		ArrayList<Plataforma> plats = new ArrayList<Plataforma>();
-		Plataforma ps4 = new Plataforma("PlayStation 4", 1.3f);
-		Plataforma xbone = new Plataforma("Xbox One", 1.2f);
-		Plataforma swit = new Plataforma("Nintendo Switch", 1.2f);
-		Plataforma ps3 = new Plataforma("PlayStation 3", 1.1f);
-		Plataforma x360 = new Plataforma("Xbox 360", 1.0f);
-		plats.add(ps4);
-		plats.add(xbone);
-		plats.add(swit);
-		plats.add(ps3);
-		plats.add(x360);
-		
-		// Jogos
-		Jogo fifa19p4 = new Jogo("FIFA 19", 2.0f, 10, ps4);
-		Jogo fifa19x1 = new Jogo("FIFA 19", 2.0f, 10, xbone);
-		Jogo fifa19p3 = new Jogo("FIFA 19", 2.0f, 10, ps3);
-		Jogo fifa19x3 = new Jogo("FIFA 19", 2.0f, 10, x360);
-		Jogo fifa19sw = new Jogo("FIFA 18", 2.0f, 10, swit);
-		Jogo rlp = new Jogo("Rocket League", 1.0f, 40, ps4);
-		Jogo rlx = new Jogo("Rocket League", 1.0f, 40, xbone);
-		Jogo gow = new Jogo("God of War", 2.5f, 12, ps4);
-		Jogo tlou = new Jogo("The Last of Us", 2.5f, 15, ps4);
-		
-		//mysql_conn.addJogo(fifa19p4);
-		//System.out.println(mysql_conn.getPlat("PS4").toString());
-		
-		// Add jogos aas plataformas
-		ps4.addJogo(fifa19p4);
-		ps4.addJogo(rlp);
-		ps4.addJogo(gow);
-		ps4.addJogo(tlou);
-		xbone.addJogo(fifa19x1);
-		xbone.addJogo(rlx);
-		x360.addJogo(fifa19x3);
-		ps3.addJogo(fifa19p3);
-		swit.addJogo(fifa19sw);
-		
-		// Clientes
-		Cliente joao = new Cliente("Joao","1234567","09123182","joao@mail.com","992883229");
-		Cliente victor = new Cliente("Victor", "2345678", "08123741", "victor@mail.com","999872318");
-		Cliente pedro = new Cliente("Pedro", "1247821", "01239878", "pedro@mail.com", "992738212");
-		
-		
-		// Locacoes
-		try {
-			Locacao loc0 = new Locacao(fifa19p4, 14);
-			joao.addLocacao(loc0);
-			loc0.alugar();
-			System.out.println("Locacao realizada. Protocolo: " + loc0.getID());
-			System.out.println(loc0.toString());
-			
-			Locacao loc1 = new Locacao(gow, 7);
-			loc1.alugar();
-			joao.addLocacao(loc1);
-			System.out.println("Locacao realizada. Protocolo: " + loc1.getID());
-			System.out.println(loc1.toString());
-			
-			Locacao loc2 = new Locacao(rlx, 7);
-			loc2.alugar();
-			pedro.addLocacao(loc1);
-			System.out.println("Locacao realizada. Protocolo: " + loc2.getID());
-			System.out.println(loc2.toString());
-			
-			// Mostrar clientes
-			System.out.println(joao.toString());
-			System.out.println(victor.toString());
-			System.out.println(pedro.toString());
-			
-			// Devolver jogos
-			loc0.devolver();
-			System.out.println("Locacao #" + loc0.getID() + " finalizada.");
-			loc1.devolver();
-			System.out.println("Locacao #" + loc1.getID() + " finalizada.");
-			loc2.devolver();
-			System.out.println("Locacao #" + loc2.getID() + " finalizada.");
-			
-
-			// Mostrar clientes novamente
-			System.out.println(joao.toString());
-			System.out.println(victor.toString());
-			System.out.println(pedro.toString());
-		} catch(AlugarEx ex){
-			System.out.println("Erro ao alugar: " + ex.getMessage());
-		} catch(DevolverEx ex){
-			System.out.println("Erro ao devolver: " + ex.getMessage());
 		}
-		*/
+		reader.close();
 		System.exit(0);
 	}
 }

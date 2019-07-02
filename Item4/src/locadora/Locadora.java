@@ -54,28 +54,34 @@ public class Locadora {
 		int qtd = getint("Quantidade:");
 		
 		int platpos = search_plat("euro truck simulator");
-		// Pede plataforma ate ter uma existente
-		while(platpos == -1) {
-			String plat = getstr("Plataforma:");
-			platpos = search_plat(plat);
+
+		// Cadastra em todas as plataformas listadas
+		String plat = getstr("Plataformas (separadas por virgula):");
+		String[] plats = plat.split(", ");
+		for(String p : plats) {
+			platpos = search_plat(p);
+			if(platpos == -1) {
+				sysmsg("Plataforma " + p + " nao cadastrada.");
+				continue;
+			}
+			if(search_gameplat(titulo,this.plataformas.get(platpos).getNome()) != -1){
+				sysmsg("Jogo ja cadastrado para a plataforma " + p);
+				continue;
+			}
+
+			Jogo gm = new Jogo(titulo,pbase,qtd,plataformas.get(platpos));
+			// Salva no banco de dados
+			JogoDAO jdao = new JogoDAO();
+			
+			if(jdao.add(gm)) {
+				// Salva localmente (com o id)
+				this.jogos.clear();
+				this.jogos = jdao.getAll();
+			} else {
+				sysmsg("Erro ao cadastrar jogo.");
+			}
+			jdao.close();
 		}
-		if(search_gameplat(titulo,this.plataformas.get(platpos).getNome()) != -1) {
-			sysmsg("Jogo ja cadastrado.");
-			return;
-		}
-		
-		Jogo gm = new Jogo(titulo,pbase,qtd,plataformas.get(platpos));
-		// Salva no banco de dados
-		JogoDAO jdao = new JogoDAO();
-		
-		if(jdao.add(gm)) {
-			// Salva localmente (com o id)
-			this.jogos.clear();
-			this.jogos = jdao.getAll();
-		} else {
-			sysmsg("Erro ao cadastrar jogo.");
-		}
-		jdao.close();
 	}
 	
 	public void cadastrar_cliente() {
@@ -191,7 +197,7 @@ public class Locadora {
 			boolean found = false;
 			for(int i=0;i<this.jogos.size();i++) {
 				Jogo curr_gm = this.jogos.get(i);
-				if(curr_gm.getTitulo().equals(gname)) {
+				if(curr_gm.getTitulo().contains(gname)) {
 					System.out.println(curr_gm.toString());
 					found = true;
 				}
@@ -285,17 +291,30 @@ public class Locadora {
 	
 	private String getstr(String txtin) {
 		System.out.println(txtin);
-		return this.reader.nextLine();
+		//this.reader.nextLine();
+		this.reader = new Scanner(System.in);
+		if(this.reader.hasNextLine())
+			return this.reader.nextLine();
+		else
+			return "";
 	}
 	
 	private int getint(String txtin) {
 		System.out.println(txtin);
-		return this.reader.nextInt();
+		this.reader = new Scanner(System.in);
+		if(this.reader.hasNextInt())
+			return this.reader.nextInt();
+		else
+			return 0;
 	}
 	
 	private double getdbl(String txtin) {
 		System.out.println(txtin);
-		return this.reader.nextDouble();
+		this.reader = new Scanner(System.in);
+		if(this.reader.hasNextDouble())
+			return this.reader.nextDouble();
+		else
+			return 0f;
 	}
 	
 	private void sysmsg(String msg) {

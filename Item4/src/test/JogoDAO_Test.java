@@ -18,7 +18,7 @@ public class JogoDAO_Test {
 		jdao.close();
 		
 	}
-	
+	/*
 	@Test
 	public void testJogoDAOremove() {
 		
@@ -31,9 +31,9 @@ public class JogoDAO_Test {
 		Assert.assertEquals("Houve um problema ao remover do banco de dados", sizeantes, jdao.getAll().size());
 		
 		jdao.close();
-	}
+	}*/
 	
-	@Test
+	/*@Test
 	public void testJogoDAOupdate() {
 		
 		JogoDAO jdao = new JogoDAO();
@@ -45,6 +45,6 @@ public class JogoDAO_Test {
 		
 		jdao.remove(rl);
 		jdao.close();
-	}
+	}*/
 	
 }

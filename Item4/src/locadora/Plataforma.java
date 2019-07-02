@@ -16,7 +16,6 @@ public class Plataforma {
     public String getNome(){
         return nome;
     }
-
     public void setCoeficiente(double coeficiente){
         this.coeficiente = coeficiente;
     }
