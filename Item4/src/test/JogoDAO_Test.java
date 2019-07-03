@@ -11,14 +11,15 @@ public class JogoDAO_Test {
 		JogoDAO jdao = new JogoDAO();
 		Plataforma pc = new Plataforma("PC", 1);
 		Jogo rl = new Jogo ("Rocket League", 1.25, 4, pc);
+		int sizeantes = jdao.getAll().size();
 		jdao.add(rl);
-		Assert.assertEquals("Houve um problema ao adicionar no banco de dados", "Rocket League", rl.getID());
+		Assert.assertEquals("Houve um problema ao adicionar no banco de dados", sizeantes+1, jdao.getAll().size());
 		
 		jdao.remove(rl);
 		jdao.close();
 		
 	}
-	/*
+	
 	@Test
 	public void testJogoDAOremove() {
 		
@@ -31,7 +32,7 @@ public class JogoDAO_Test {
 		Assert.assertEquals("Houve um problema ao remover do banco de dados", sizeantes, jdao.getAll().size());
 		
 		jdao.close();
-	}*/
+	}
 	
 	/*@Test
 	public void testJogoDAOupdate() {
